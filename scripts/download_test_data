@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+DATA_ROOT="${REPO_ROOT}/estore/src/test/java/org/estore/eval/ldbc/data"
+
+SNB_DIR="${DATA_ROOT}/social_network-csv_composite-longdateformatter-sf0.1"
+FIN_DIR="${DATA_ROOT}/sf0.01"
+
+if [ -d "${SNB_DIR}" ] && [ -d "${FIN_DIR}" ]; then
+    echo "Data already downloaded"
+    exit 0
+fi
+
+mkdir -p "${DATA_ROOT}"
+cd "${DATA_ROOT}"
+
+if [ ! -d "${SNB_DIR}" ]; then
+    wget --no-check-certificate \
+        "https://datasets.ldbcouncil.org/snb-interactive-v1/social_network-sf0.1-CsvComposite-LongDateFormatter.tar.zst"
+    zstd -d social_network-sf0.1-CsvComposite-LongDateFormatter.tar.zst
+    tar -xvf social_network-sf0.1-CsvComposite-LongDateFormatter.tar
+    if [ -d "social_network-sf0.1-CsvComposite-LongDateFormatter" ] && [ ! -d "social_network-csv_composite-longdateformatter-sf0.1" ]; then
+        mv social_network-sf0.1-CsvComposite-LongDateFormatter social_network-csv_composite-longdateformatter-sf0.1
+    fi
+    rm -f social_network-sf0.1-CsvComposite-LongDateFormatter.tar.zst
+    rm -f social_network-sf0.1-CsvComposite-LongDateFormatter.tar
+fi
+
+if [ ! -d "${FIN_DIR}" ]; then
+    wget -O test.tar.gz -L "https://drive.usercontent.google.com/download?id=1kBouy5zrUE4h9QmklaIiWNPDfC9-XgD-&export=download&authuser=0&confirm=t&uuid=971b21ed-db6a-4c84-b4d1-db510b9ea4f8&at=APZUnTWZ702p54DH7frTbxTgQijv:1701486595409"
+    gzip -d test.tar.gz
+    tar -xvf test.tar
+    rm -f test.tar
+fi

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.estore</groupId> <!-- should this be changed to org.estore? -->
+  <artifactId>estore-internal</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0</version>
+  <name>estore-internal</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <maven.compiler.release>8</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <modules>
+    <module>estore</module>
+    <module>estore-maven-plugin</module>
+  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <id>checkstyle-verify</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- Enforce local 4-space indentation settings for Java. -->
+          <configLocation>checkstyle.xml</configLocation>
+          <!-- Ignore generated source roots (e.g., target/generated-sources). -->
+          <excludeGeneratedSources>true</excludeGeneratedSources>
+          <!-- Ignore committed ANTLR-generated parser sources in estore module. -->
+          <excludes>org/estore/antlr4/**</excludes>
+          <failOnViolation>false</failOnViolation>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <!-- Re-run format on all sources; when true, unchanged files can be skipped via index. -->
+          <upToDateChecking>
+            <enabled>false</enabled>
+          </upToDateChecking>
+          <java>
+            <googleJavaFormat>
+              <style>AOSP</style>
+            </googleJavaFormat>
+          </java>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

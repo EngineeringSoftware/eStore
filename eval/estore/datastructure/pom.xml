@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.estore.eval</groupId>
+    <artifactId>estore</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <packaging>pom</packaging>
+  <groupId>org.estore.eval.estore</groupId>
+  <artifactId>datastructure</artifactId>
+  <version>1.0.0</version>
+  <name>Data Structure Tests</name>
+  <url>http://maven.apache.org</url>
+  <modules>
+    <module>jcf</module>
+    <module>guava</module>
+    <module>eclipse</module>
+  </modules>
+</project>
