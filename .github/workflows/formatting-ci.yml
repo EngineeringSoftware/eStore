@@ -1,0 +1,20 @@
+name: Formatting CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+
+      - name: Check formatting
+        run: mvn spotless:check
