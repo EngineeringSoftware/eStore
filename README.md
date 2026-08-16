@@ -1,4 +1,5 @@
 # In-memory Object Graph Stores
+<img src="images/estore_logo.png" width="700" />
 
 Implementation of an in-memory object graph store, dubbed ϵStore. Our
 key innovation is a storage model -- epsilon store -- that equates an
