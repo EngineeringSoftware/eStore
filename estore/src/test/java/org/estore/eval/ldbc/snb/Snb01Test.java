@@ -32,52 +32,57 @@ public class Snb01Test {
         readDataSet();
     }
 
+    private void printQueryTime(String queryName, long startNanos) {
+        String profileOpt = System.getProperty("profile");
+        if (profileOpt != null && profileOpt.equals("true")) {
+            System.out.println(queryName);
+            System.out.println(
+                    "Time: " + ((float) (System.nanoTime() - startNanos)) / 1_000_000.0 + "ms");
+        }
+    }
+
     @CompileQuery
     @Test
     public void testInteractiveDeleteQuery2() {
-        // System.out.println("InteractiveDeleteQuery2");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (m:`org.estore.eval.ldbc.snb.util.Person`"
                                 + "{id:10995116278291})-[likes:LIKES2]->(:`org.estore.eval.ldbc.snb.util.Post`"
                                 + "{id:343597383821}) DELETE likes RETURN COUNT(m)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        printQueryTime("InteractiveDeleteQuery2", t1);
         assertEquals(result.get("COUNT(m)").get(0), 1);
     }
 
     @CompileQuery
     @Test
     public void testInteractiveDeleteQuery3() {
-        // System.out.println("InteractiveDeleteQuery3");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (m:`org.estore.eval.ldbc.snb.util.Person`"
                                 + " {id:19791209300608})-[likes:LIKES1]->(:`org.estore.eval.ldbc.snb.util.Comment`"
                                 + " {id:549755814421}) DELETE likes RETURN COUNT(m)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000 + "ms");
+        printQueryTime("InteractiveDeleteQuery3", t1);
         assertEquals(result.get("COUNT(m)").get(0), 1);
     }
 
     @CompileQuery
     @Test
     public void testInteractiveDeleteQuery5() {
-        // System.out.println("InteractiveDeleteQuery5");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (m:`org.estore.eval.ldbc.snb.util.Forum`"
                                 + " {id:481036337162})-[hasMember:HAS_MEMBER]->(:`org.estore.eval.ldbc.snb.util.Person`"
                                 + " {id:2199023256077}) DELETE hasMember RETURN COUNT(m)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000 + "ms");
+        printQueryTime("InteractiveDeleteQuery5", t1);
         assertEquals(result.get("COUNT(m)").get(0), 1);
     }
 
     @CompileQuery
     @Test
     public void testInteractiveShortQuery1() {
-        // System.out.println("InteractiveShortQuery1");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
@@ -86,7 +91,7 @@ public class Snb01Test {
                                 + " RETURN n.firstName AS firstName, n.lastName AS lastName, n.birthday AS"
                                 + " birthday, n.locationIP AS locationIP, n.browserUsed AS browserUsed, p.id AS"
                                 + " cityId, n.gender AS gender, n.creationDate AS creationDate");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000 + "ms");
+        printQueryTime("InteractiveShortQuery1", t1);
         assertEquals(result.get("birthday").get(0), 579484800000L);
         assertEquals(result.get("firstName").get(0), "Min-Jung");
         assertEquals(result.get("lastName").get(0), "Park");
@@ -100,14 +105,13 @@ public class Snb01Test {
     @CompileQuery
     @Test
     public void testInteractiveShortQuery5() {
-        // System.out.println("InteractiveShortQuery5");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (m:`org.estore.eval.ldbc.snb.util.Comment`"
                                 + " {id:206158430603})-[:HAS_CREATOR]->(p:`org.estore.eval.ldbc.snb.util.Person`)"
                                 + " RETURN p.id AS personId, p.firstName AS firstName, p.lastName AS lastName");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000 + "ms");
+        printQueryTime("InteractiveShortQuery5", t1);
         assertEquals(result.get("firstName").get(0), "Rudolf");
         assertEquals(result.get("lastName").get(0), "Engel");
         assertEquals(result.get("personId").get(0), 2199023256437L);
@@ -116,56 +120,52 @@ public class Snb01Test {
     @CompileQuery
     @Test
     public void testInteractiveUpdateQuery2() {
-        // System.out.println("InteractiveUpdateQuery2");
         long t1 = System.nanoTime();
         Table result =
                 estore.query( // error here
                         "MATCH (person:`org.estore.eval.ldbc.snb.util.Person` {id:10995116278291}),"
                                 + " (post:`org.estore.eval.ldbc.snb.util.Post` {id:481036337280})  CREATE"
                                 + " (person)-[r:LIKES2]->(post) RETURN COUNT(r)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000 + "ms");
+        printQueryTime("InteractiveUpdateQuery2", t1);
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
     @CompileQuery
     @Test
     public void testInteractiveUpdateQuery3() {
-        // System.out.println("InteractiveUpdateQuery3");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (person:`org.estore.eval.ldbc.snb.util.Person` {id:19791209301454}),"
                                 + " (comment:`org.estore.eval.ldbc.snb.util.Comment` {id:481036337631})  CREATE"
                                 + " (person)-[r:LIKES1]->(comment) RETURN COUNT(r)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000 + "ms");
+        printQueryTime("InteractiveUpdateQuery3", t1);
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
     @CompileQuery
     @Test
     public void testInteractiveUpdateQuery5() {
-        // System.out.println("InteractiveUpdateQuery5");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (f:`org.estore.eval.ldbc.snb.util.Forum` {id:549755813984}),"
                                 + " (p:`org.estore.eval.ldbc.snb.util.Person` {id:19791209300852})  CREATE"
                                 + " (f)-[r:HAS_MEMBER]->(p) RETURN COUNT(r)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000 + "ms");
+        printQueryTime("InteractiveUpdateQuery5", t1);
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
     @CompileQuery
     @Test
     public void testInteractiveUpdateQuery8() {
-        // System.out.println("InteractiveUpdateQuery8");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (p1:`org.estore.eval.ldbc.snb.util.Person` {id:4398046512167}),"
                                 + " (p2:`org.estore.eval.ldbc.snb.util.Person` {id:2199023256816})  CREATE"
                                 + " (p1)-[r:KNOWS]->(p2) RETURN COUNT(r)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000 + "ms");
+        printQueryTime("InteractiveUpdateQuery8", t1);
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
