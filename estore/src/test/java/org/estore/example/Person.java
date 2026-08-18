@@ -16,4 +16,9 @@ public class Person {
         this.age = age;
         this.friend = friend;
     }
+
+    @Override
+    public String toString() {
+        return name + " (" + age + ")";
+    }
 }

@@ -1,5 +1,5 @@
 # In-memory Object Graph Stores
-<img src="images/estore_logo.png" width="700" />
+<img src="images/estore_logo.png" width="400" />
 
 Implementation of an in-memory object graph store, dubbed ϵStore. Our
 key innovation is a storage model -- epsilon store -- that equates an
@@ -23,24 +23,41 @@ programs.
 
    Estore db = new Estore("exampleDb", new EstoreOptions().useUnsafe(false));
    db.captureAll(alice);
+
+   // MATCH finds Person objects; RETURN puts them in column p
    Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN p");
+
+   result.print();
+   Person p = (Person) result.get("p").get(0);
+   System.out.println(p.name + ", " + p.age);
+   System.out.println(p.friend.name);
    ```
 
    `alice` is an ordinary Java `Person` object (name `"Alice"`, age 28). Its
    `friend` field points to Bob, and Bob's `friend` field points to Charlie, so
    the in-memory graph is Alice → Bob → Charlie. `captureAll(alice)` walks that
-   graph from Alice and stores every reachable object; the query then returns
-   the captured `Person` nodes.
+   graph from Alice and stores every reachable object. The query finds those
+   `Person` objects (`MATCH`) and returns them as a table column named `p`
+   (`RETURN`). Cells in that table are the same heap objects, so they can be
+   printed, cast to `Person`, and used like any other Java object — including
+   following `friend` in ordinary Java.
 
 2. Querying object relationships.
 
    ```java
    Table friends =
        db.query("MATCH (a:`org.estore.example.Person`)-[:friend]->(b:`org.estore.example.Person`) RETURN a, b");
+
+   for (int i = 0; i < friends.getSize(); i++) {
+       Person a = (Person) friends.get("a").get(i);
+       Person b = (Person) friends.get("b").get(i);
+       System.out.println(a.name + " → " + b.name);
+   }
    ```
 
-   This query follows `friend` references between captured `Person` objects and
-   returns each matched pair.
+   `-[:friend]->` follows the `friend` field between captured `Person` objects
+   and returns each matched pair. The loop casts those cells back to `Person`
+   and prints the names.
 
 ## Using ϵStore in a Maven Project
 
