@@ -19,8 +19,7 @@ public class MultiDimensionalArrayTest {
     @BeforeEach
     public void setup() throws Exception {
         rand = ThreadLocalRandom.current();
-        db =
-                new Estore(MultiDimensionalArrayTest.class.getName());
+        db = new Estore(MultiDimensionalArrayTest.class.getName());
     }
 
     @Test

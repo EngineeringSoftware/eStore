@@ -8,7 +8,6 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import java.util.concurrent.ThreadLocalRandom;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

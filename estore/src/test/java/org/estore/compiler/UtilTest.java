@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import org.estore.example.A;
 import org.estore.example.B;
 import org.estore.planner.util.ClassInfo;

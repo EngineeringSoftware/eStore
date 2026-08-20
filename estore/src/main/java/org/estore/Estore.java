@@ -356,8 +356,7 @@ public class Estore implements Serializable {
             ArrayList<Object> labelList = new ArrayList<Object>();
             if (obj instanceof Class) {
                 if (labelClassInfoMap.get(Class.class.getName()) == null) {
-                    ClassInfo classCInfo =
-                            labelObjectMap.putNew(Class.class, new ArrayList<>());
+                    ClassInfo classCInfo = labelObjectMap.putNew(Class.class, new ArrayList<>());
                     labelClassInfoMap.put(Class.class.getName(), classCInfo);
                 }
                 cInfo = labelClassInfoMap.get(Class.class.getName());
@@ -447,8 +446,7 @@ public class Estore implements Serializable {
             ArrayList<Object> labelList = new ArrayList<Object>();
             if (obj instanceof Class) {
                 if (labelClassInfoMap.get(Class.class.getName()) == null) {
-                    ClassInfo classCInfo =
-                            labelObjectMap.putNew(Class.class, new ArrayList<>());
+                    ClassInfo classCInfo = labelObjectMap.putNew(Class.class, new ArrayList<>());
                     labelClassInfoMap.put(Class.class.getName(), classCInfo);
                 }
                 cInfo = labelClassInfoMap.get(Class.class.getName());

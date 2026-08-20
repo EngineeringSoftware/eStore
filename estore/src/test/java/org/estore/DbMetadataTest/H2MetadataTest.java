@@ -29,8 +29,7 @@ public class H2MetadataTest {
 
         estore1 =
                 new Estore(
-                        H2MetadataTest.class.getName(),
-                        new EstoreOptions().profile(profileFlag));
+                        H2MetadataTest.class.getName(), new EstoreOptions().profile(profileFlag));
         Class.forName("org.h2.Driver");
         h2Conn1 = DriverManager.getConnection("jdbc:h2:mem:h2TestDb1", "sa", "");
     }

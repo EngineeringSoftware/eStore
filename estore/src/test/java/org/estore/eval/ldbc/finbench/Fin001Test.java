@@ -25,10 +25,7 @@ public class Fin001Test {
 
     @BeforeEach
     public void setupData() throws Exception {
-        estore =
-                new Estore(
-                        Fin001Test.class.getName(),
-                        new EstoreOptions().profile(false));
+        estore = new Estore(Fin001Test.class.getName(), new EstoreOptions().profile(false));
 
         readDataSet();
     }

@@ -30,8 +30,7 @@ public class CreateInstanceTest {
         try {
             estore =
                     new Estore(
-                            CreateInstanceTest.class.getName(),
-                            new EstoreOptions().useDfs(false));
+                            CreateInstanceTest.class.getName(), new EstoreOptions().useDfs(false));
         } catch (Exception e) {
             e.printStackTrace();
         }
