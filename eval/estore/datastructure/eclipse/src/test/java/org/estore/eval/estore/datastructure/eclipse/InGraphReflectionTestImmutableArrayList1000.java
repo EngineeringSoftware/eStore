@@ -25,7 +25,7 @@ public class InGraphReflectionTestImmutableArrayList1000 {
       listData.add(rand.nextLong(0, Long.MAX_VALUE));
     }
     immutableArrayList = new ImmutableListFactoryImpl().withAll(listData);
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(immutableArrayList);
   }
 

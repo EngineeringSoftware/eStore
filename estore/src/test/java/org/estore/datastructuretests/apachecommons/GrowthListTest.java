@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.collections4.list.GrowthList;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ public class GrowthListTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(GrowthListTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(GrowthListTest.class.getName());
         size = 10;
     }
 

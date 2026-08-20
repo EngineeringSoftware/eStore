@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import org.estore.example.A;
 import org.estore.example.B;
 import org.estore.planner.util.ClassInfo;
@@ -24,7 +23,7 @@ public class UtilTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        estore = new Estore(UtilTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(UtilTest.class.getName());
         a = estore.insert(A.class);
         aInfo = estore.getLabelClassInfoMap().get(A.class.getName());
     }

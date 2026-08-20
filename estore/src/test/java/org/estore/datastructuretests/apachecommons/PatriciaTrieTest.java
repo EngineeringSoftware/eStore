@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.commons.collections4.trie.PatriciaTrie;
 import org.estore.Estore;
 import org.estore.EstoreException;
-import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ public class PatriciaTrieTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(PatriciaTrieTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(PatriciaTrieTest.class.getName());
         size = 5;
     }
 

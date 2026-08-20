@@ -26,7 +26,7 @@ public class InGraphReflectionTestHashMultiset100 {
       multiMap.put(rand.nextLong(0, Long.MAX_VALUE), rand.nextLong(0, Long.MAX_VALUE));
     }
     multiSet = HashMultiset.create(values);
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(multiMap);
   }
 

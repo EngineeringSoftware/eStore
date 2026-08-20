@@ -21,7 +21,7 @@ public class InGraphReflectionTestArrayDeque10000 {
     for (int j = 0; j < 10000; j++) {
       list.add(rand.nextLong(0, Long.MAX_VALUE));
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(list);
   }
 

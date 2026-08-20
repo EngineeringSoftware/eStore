@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.estore.Estore;
 import org.estore.EstoreException;
-import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ public class FastListTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(FastListTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(FastListTest.class.getName());
         size = 10;
     }
 
