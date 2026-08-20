@@ -21,7 +21,7 @@ public class InGraphReflectionTestArrayList1000 {
     for (int j = 0; j < 1000; j++) {
       list.add(rand.nextLong());
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(list);
   }
 

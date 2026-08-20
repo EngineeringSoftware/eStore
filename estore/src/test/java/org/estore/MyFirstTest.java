@@ -13,7 +13,7 @@ public class MyFirstTest {
 
     @BeforeEach
     void setup() throws Exception {
-        db = new Estore(MyFirstTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(MyFirstTest.class.getName());
     }
 
     @Test

@@ -119,14 +119,13 @@ function install_estore() {
 function exec_estore() {
         check_deps || \
                 { echo "Dependencies not satisfied. Please install with: ./s install_deps"; return 1; }
-        echo "Usage: $0 [port] [useUnsafe]"      
+        echo "Usage: $0 [port]"
         local port=${1:-1234}
-        local useUnsafe=${2:-false}
         echo "Example: echo 'MATCH (n) return n' | nc -q 0 localhost $port"
         echo "send 'q' to exit"
         compile_estore
         ( cd estore
-          mvn exec:java@main -Dexec.args="$port $useUnsafe" &
+          mvn exec:java@main -Dexec.args="$port" &
           echo "Running db as $!"
         )
 }

@@ -17,7 +17,7 @@ public class HashBiMapTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(HashBiMapTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(HashBiMapTest.class.getName());
         size = 10;
     }
 

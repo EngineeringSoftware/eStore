@@ -22,7 +22,7 @@ public class EclipseTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        estore = new Estore(EclipseTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(EclipseTest.class.getName());
         rand = ThreadLocalRandom.current();
     }
 

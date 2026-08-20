@@ -22,7 +22,7 @@ public class JCFTest {
     @BeforeEach
     public void setup() throws Exception {
         rand = ThreadLocalRandom.current();
-        estore = new Estore(JCFTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(JCFTest.class.getName());
     }
 
     @Test

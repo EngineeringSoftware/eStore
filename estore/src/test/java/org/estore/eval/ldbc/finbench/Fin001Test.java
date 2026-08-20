@@ -28,7 +28,7 @@ public class Fin001Test {
         estore =
                 new Estore(
                         Fin001Test.class.getName(),
-                        new EstoreOptions().useUnsafe(false).profile(false));
+                        new EstoreOptions().profile(false));
 
         readDataSet();
     }

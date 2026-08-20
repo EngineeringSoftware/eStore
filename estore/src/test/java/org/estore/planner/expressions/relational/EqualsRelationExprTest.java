@@ -25,9 +25,7 @@ class EqualsRelationExprTest {
     @BeforeEach
     void setUp() throws Exception {
         db =
-                new Estore(
-                        EqualsRelationExprTest.class.getName() + "_" + System.nanoTime(),
-                        new EstoreOptions().useUnsafe(true));
+                new Estore(EqualsRelationExprTest.class.getName() + "_" + System.nanoTime());
     }
 
     @Test

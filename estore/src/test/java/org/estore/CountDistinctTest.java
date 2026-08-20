@@ -12,7 +12,7 @@ public class CountDistinctTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(CountDistinctTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(CountDistinctTest.class.getName());
     }
 
     @Test

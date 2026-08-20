@@ -1,7 +1,6 @@
 package org.estore;
 
 public class EstoreOptions {
-    private boolean useUnsafe;
     private boolean useDfs;
     private boolean useRecursion;
     private boolean profileParseTreeGenTime;
@@ -10,7 +9,6 @@ public class EstoreOptions {
     private boolean profileTotalQueryTime;
 
     public EstoreOptions() {
-        useUnsafe = true;
         useDfs = false;
         useRecursion = false;
         profileParseTreeGenTime = false;
@@ -21,11 +19,6 @@ public class EstoreOptions {
 
     public static EstoreOptions getDefaultOptions() {
         return new EstoreOptions();
-    }
-
-    public EstoreOptions useUnsafe(boolean flag) {
-        useUnsafe = flag;
-        return this;
     }
 
     public EstoreOptions useDfs(boolean flag) {
@@ -64,10 +57,6 @@ public class EstoreOptions {
     public EstoreOptions profileTotalQueryTime(boolean flag) {
         profileTotalQueryTime = flag;
         return this;
-    }
-
-    public boolean getUseUnsafe() {
-        return useUnsafe;
     }
 
     public boolean getUseDfs() {

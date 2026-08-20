@@ -24,7 +24,7 @@ public class UtilTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        estore = new Estore(UtilTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(UtilTest.class.getName());
         a = estore.insert(A.class);
         aInfo = estore.getLabelClassInfoMap().get(A.class.getName());
     }

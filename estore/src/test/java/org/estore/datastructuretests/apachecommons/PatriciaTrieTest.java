@@ -17,7 +17,7 @@ public class PatriciaTrieTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(PatriciaTrieTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(PatriciaTrieTest.class.getName());
         size = 5;
     }
 

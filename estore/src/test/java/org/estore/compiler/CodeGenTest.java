@@ -27,7 +27,7 @@ public class CodeGenTest {
             estore =
                     new Estore(
                             CodeGenTest.class.getName(),
-                            new EstoreOptions().useUnsafe(true).useDfs(false));
+                            new EstoreOptions().useDfs(false));
         } catch (Exception e) {
             e.printStackTrace();
         }

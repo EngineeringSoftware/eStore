@@ -28,7 +28,7 @@ public class Snb01Test {
         estore =
                 new Estore(
                         Snb01Test.class.getName(),
-                        new EstoreOptions().useUnsafe(false).profile(false));
+                        new EstoreOptions().profile(false));
         readDataSet();
     }
 

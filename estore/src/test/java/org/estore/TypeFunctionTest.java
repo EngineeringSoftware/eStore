@@ -12,7 +12,7 @@ public class TypeFunctionTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(TypeFunctionTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(TypeFunctionTest.class.getName());
     }
 
     @Test

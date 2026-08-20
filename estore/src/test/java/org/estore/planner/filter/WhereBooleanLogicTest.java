@@ -15,9 +15,7 @@ class WhereBooleanLogicTest {
     @BeforeEach
     void setUp() throws Exception {
         db =
-                new Estore(
-                        WhereBooleanLogicTest.class.getName() + "_" + System.nanoTime(),
-                        new EstoreOptions().useUnsafe(true));
+                new Estore(WhereBooleanLogicTest.class.getName() + "_" + System.nanoTime());
     }
 
     @Test

@@ -12,7 +12,7 @@ public class AggregateFunctionTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(AggregateFunctionTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(AggregateFunctionTest.class.getName());
         Person c = new Person("C", 30);
         Person b = new Person("B", 40, c);
         Person a = new Person("A", 20, b);

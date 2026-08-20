@@ -20,9 +20,7 @@ public class MultiDimensionalArrayTest {
     public void setup() throws Exception {
         rand = ThreadLocalRandom.current();
         db =
-                new Estore(
-                        MultiDimensionalArrayTest.class.getName(),
-                        new EstoreOptions().useUnsafe(false));
+                new Estore(MultiDimensionalArrayTest.class.getName());
     }
 
     @Test
@@ -221,32 +219,5 @@ public class MultiDimensionalArrayTest {
         assertNull(Array.get(arr, 1));
         assertEquals(10L, ((Long) Array.get(arr, 0)).longValue());
         assertEquals(30L, ((Long) Array.get(arr, 2)).longValue());
-    }
-
-    @Test
-    public void testArrayTable_unsafe() throws Exception {
-        Estore unsafeStore =
-                new Estore(
-                        MultiDimensionalArrayTest.class.getName() + "Unsafe",
-                        new EstoreOptions().useUnsafe(true));
-        Long[][] grid = new Long[10][10];
-        long target = rand.nextLong(0, Long.MAX_VALUE);
-        int ti = 4;
-        int tj = 6;
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                grid[i][j] = (i == ti && j == tj) ? target : rand.nextLong(0, Long.MAX_VALUE);
-            }
-        }
-        unsafeStore.captureAll(grid);
-
-        Table result =
-                unsafeStore.query(
-                        "MATCH (n:`"
-                                + grid.getClass().getName()
-                                + "`)-[]->()-[]->(m {value:"
-                                + target
-                                + "}) RETURN m");
-        assertEquals(target, ((Long) result.get("m").get(0)).longValue());
     }
 }

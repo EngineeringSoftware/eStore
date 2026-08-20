@@ -17,7 +17,7 @@ public class HashBagTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(HashBagTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(HashBagTest.class.getName());
         size = 10;
     }
 

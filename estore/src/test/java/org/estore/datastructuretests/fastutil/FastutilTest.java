@@ -21,7 +21,7 @@ public class FastutilTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(FastutilTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(FastutilTest.class.getName());
     }
 
     @Test

@@ -17,9 +17,7 @@ public class MinMaxPriorityQueueTest {
     @BeforeEach
     public void initDatabase() throws Exception {
         estore =
-                new Estore(
-                        MinMaxPriorityQueueTest.class.getName(),
-                        new EstoreOptions().useUnsafe(false));
+                new Estore(MinMaxPriorityQueueTest.class.getName());
         size = 10;
     }
 

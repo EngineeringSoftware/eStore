@@ -24,7 +24,7 @@ public class InGraphReflectionTestUnifiedSet100 {
       setData.add(rand.nextLong(0, Long.MAX_VALUE));
     }
     unifiedSet = new UnifiedSet(setData);
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(unifiedSet);
   }
 

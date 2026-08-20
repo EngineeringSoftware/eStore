@@ -17,7 +17,7 @@ public class FastListTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(FastListTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(FastListTest.class.getName());
         size = 10;
     }
 

@@ -16,7 +16,7 @@ public class GrowthListTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(GrowthListTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(GrowthListTest.class.getName());
         size = 10;
     }
 

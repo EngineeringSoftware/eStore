@@ -21,7 +21,7 @@ programs.
    Person bob = new Person("Bob", 30, charlie);
    Person alice = new Person("Alice", 28, bob);
 
-   Estore db = new Estore("exampleDb", new EstoreOptions().useUnsafe(false));
+   Estore db = new Estore("exampleDb");
    db.captureAll(alice);
 
    // MATCH finds Person objects; RETURN puts them in column p

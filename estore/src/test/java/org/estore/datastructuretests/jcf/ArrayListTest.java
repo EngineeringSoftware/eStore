@@ -17,7 +17,7 @@ public class ArrayListTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore = new Estore(ArrayListTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(ArrayListTest.class.getName());
         size = 10;
     }
 
