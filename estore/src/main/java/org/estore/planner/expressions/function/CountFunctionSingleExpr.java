@@ -20,12 +20,15 @@ public class CountFunctionSingleExpr extends CountFunctionExpr {
 
     @Override
     public Table evaluate(Table v) {
+        String keyName = getName();
+        Table result = new Table(Arrays.asList(new String[] {keyName}));
         if (arg instanceof VarExpr) {
-            String keyName = getName();
-            Table result = new Table(Arrays.asList(new String[] {keyName}));
             String variable = ((VarExpr) arg).evaluate(null);
-
             result.get(keyName).add(v.get(variable).size());
+            return result;
+        }
+        if (arg == null) {
+            result.get(keyName).add(v.getSize());
             return result;
         }
         return null;
