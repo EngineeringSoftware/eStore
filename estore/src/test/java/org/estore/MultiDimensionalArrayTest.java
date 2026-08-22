@@ -222,7 +222,6 @@ public class MultiDimensionalArrayTest {
 
     @Test
     public void testArrayTable() throws EstoreException {
-        Estore gridStore = new Estore(MultiDimensionalArrayTest.class.getName() + "Unsafe");
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 4;
@@ -232,10 +231,10 @@ public class MultiDimensionalArrayTest {
                 grid[i][j] = (i == ti && j == tj) ? target : rand.nextLong(0, Long.MAX_VALUE);
             }
         }
-        gridStore.captureAll(grid);
+        db.captureAll(grid);
 
         Table result =
-                gridStore.query(
+                db.query(
                         "MATCH (n:`"
                                 + grid.getClass().getName()
                                 + "`)-[]->()-[]->(m {value:"
