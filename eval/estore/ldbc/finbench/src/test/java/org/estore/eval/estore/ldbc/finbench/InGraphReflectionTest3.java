@@ -15,14 +15,15 @@ import org.estore.eval.estore.ldbc.finbench.util.*;
 import org.estore.Estore;
 import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTest3 {
 
   private Estore estore;
 
   @BeforeEach
-  public void setupData() throws Exception {
-    estore = new Estore("myDb", new EstoreOptions().useUnsafe(false).profile(true));
+  public void setupData() throws EstoreException {
+    estore = new Estore("myDb", new EstoreOptions().profile(true));
 
     readDataSet();
   }
@@ -102,7 +103,7 @@ public class InGraphReflectionTest3 {
                 + " account.accountType");
   }
 
-  public void readDataSet() throws Exception {
+  public void readDataSet() throws EstoreException {
     HashMap<Long, Person> persons = new HashMap<Long, Person>();
     HashMap<Long, Account> accounts = new HashMap<Long, Account>();
     HashMap<Long, Company> companys = new HashMap<Long, Company>();

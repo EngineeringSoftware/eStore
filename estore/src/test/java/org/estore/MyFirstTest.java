@@ -12,8 +12,8 @@ public class MyFirstTest {
     private Estore db;
 
     @BeforeEach
-    void setup() throws Exception {
-        db = new Estore(MyFirstTest.class.getName(), new EstoreOptions().useUnsafe(true));
+    void setup() {
+        db = new Estore(MyFirstTest.class.getName());
     }
 
     @Test

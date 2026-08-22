@@ -11,13 +11,13 @@ public class CaseExpressionTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() throws EstoreException {
         db = new Estore(CaseExpressionTest.class.getName());
         db.captureAll(new Person("A", 20));
     }
 
     @Test
-    void caseReturnsElseWhenPredicateIsFalse() throws Exception {
+    void caseReturnsElseWhenPredicateIsFalse() {
         Table result =
                 db.query(
                         "MATCH (p:`org.estore.example.Person`) RETURN CASE WHEN p.age > 25 THEN 1 ELSE 0 END");
@@ -25,7 +25,7 @@ public class CaseExpressionTest {
     }
 
     @Test
-    void caseReturnsThenWhenPredicateIsTrue() throws Exception {
+    void caseReturnsThenWhenPredicateIsTrue() {
         Table result =
                 db.query(
                         "MATCH (p:`org.estore.example.Person`) RETURN CASE WHEN p.age > 15 THEN 1 ELSE 0 END");
@@ -33,7 +33,7 @@ public class CaseExpressionTest {
     }
 
     @Test
-    void caseMatchesSubject() throws Exception {
+    void caseMatchesSubject() {
         Table result =
                 db.query(
                         "MATCH (p:`org.estore.example.Person`) RETURN CASE p.name WHEN 'A' THEN 1 ELSE 0 END");
@@ -41,7 +41,7 @@ public class CaseExpressionTest {
     }
 
     @Test
-    void caseWithoutElseIsNullWhenNoWhenMatches() throws Exception {
+    void caseWithoutElseIsNullWhenNoWhenMatches() {
         Table result =
                 db.query(
                         "MATCH (p:`org.estore.example.Person`) RETURN CASE WHEN p.age > 99 THEN 1 END");

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashSet;
 import org.estore.Estore;
 import org.estore.EstoreException;
-import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +15,8 @@ public class HashSetTest {
     private int size;
 
     @BeforeEach
-    public void initDatabase() throws Exception {
-        estore = new Estore(HashSetTest.class.getName(), new EstoreOptions().useUnsafe(false));
+    public void initDatabase() {
+        estore = new Estore(HashSetTest.class.getName());
         size = 10;
     }
 

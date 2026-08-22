@@ -1,7 +1,6 @@
 package org.estore.eval.estore.datastructure.guava;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.concurrent.ThreadLocalRandom;
 import com.google.common.collect.ArrayTable;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import org.estore.planner.util.Table;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestArrayTable10000 {
   private Estore estore;
@@ -16,7 +16,7 @@ public class InGraphReflectionTestArrayTable10000 {
   private ArrayTable<Long, Long, Long> table;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = ThreadLocalRandom.current();
     ArrayList<Long> rows = new ArrayList<Long>();
     ArrayList<Long> columns = new ArrayList<Long>();
@@ -30,7 +30,7 @@ public class InGraphReflectionTestArrayTable10000 {
         table.put(j, k, rand.nextLong(0, Long.MAX_VALUE));
       }
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(table);
   }
 

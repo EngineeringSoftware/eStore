@@ -10,12 +10,12 @@ public class ArithmeticTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
-        db = new Estore(ArithmeticTest.class.getName(), new EstoreOptions().useUnsafe(true));
+    void setUp() {
+        db = new Estore(ArithmeticTest.class.getName());
     }
 
     @Test
-    void fourOperationsAndCountDivide() throws Exception {
+    void fourOperationsAndCountDivide() {
         db.query("CREATE (n:`ArithNode`)");
         db.query("CREATE (n:`ArithNode`)");
 

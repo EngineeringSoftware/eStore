@@ -1,7 +1,6 @@
 package org.estore.eval.estore.datastructure.eclipse;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.concurrent.ThreadLocalRandom;
 import org.eclipse.collections.impl.list.immutable.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +9,7 @@ import org.estore.planner.util.Table;
 import java.util.ArrayList;
 import org.eclipse.collections.api.list.ImmutableList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestImmutableArrayList1000 {
   private Estore estore;
@@ -18,14 +18,14 @@ public class InGraphReflectionTestImmutableArrayList1000 {
   private ArrayList<Long> listData;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = ThreadLocalRandom.current();
     listData = new ArrayList<Long>();
     for (int j = 0; j < 1000; j++) {
       listData.add(rand.nextLong(0, Long.MAX_VALUE));
     }
     immutableArrayList = new ImmutableListFactoryImpl().withAll(listData);
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(immutableArrayList);
   }
 

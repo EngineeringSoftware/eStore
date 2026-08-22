@@ -3,40 +3,39 @@ package org.estore.DbMetadataTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class EstoreMetadataTest {
-    private Estore estore1, estore2, estore_u1, estore_u2, estore_u3, estore_r1, estore_r2;
+    private Estore estore1, estore2, estore_d1, estore_d2, estore_d3, estore_b1, estore_b2;
 
     @BeforeEach
-    public void setup() throws Exception {
-        String unsafeOpt = System.getProperty("useUnsafe");
-        Boolean unsafeFlag = (unsafeOpt != null) && (unsafeOpt.equals("true"));
+    public void setup() {
         String profileOpt = System.getProperty("profile");
         Boolean profileFlag = (profileOpt != null) && (profileOpt.equals("true"));
 
         estore1 =
                 new Estore(
                         EstoreMetadataTest.class.getName(),
-                        new EstoreOptions().useUnsafe(unsafeFlag).profile(profileFlag));
+                        new EstoreOptions().profile(profileFlag));
         estore2 =
                 new Estore(
                         EstoreMetadataTest.class.getName() + "2",
-                        new EstoreOptions().useUnsafe(unsafeFlag).profile(false));
+                        new EstoreOptions().profile(false));
     }
 
     @Test
-    public void testDbName() throws Exception {
+    public void testDbName() throws EstoreException {
         estore1.captureAll(estore2);
         Table res = estore1.query("MATCH (n: `org.estore.Estore`) RETURN n.name");
         assertEquals(EstoreMetadataTest.class.getName() + "2", res.get("n.name").get(0));
     }
 
     @Test
-    public void testDbNameRepeat() throws Exception {
+    public void testDbNameRepeat() throws EstoreException {
         estore1.captureAll(estore2);
         Table res = null;
         for (int i = 0; i < 5; i++) {
@@ -46,84 +45,78 @@ public class EstoreMetadataTest {
     }
 
     @Test
-    public void testOptions() throws Exception {
-        estore_u1 =
+    public void testOptions() throws EstoreException {
+        estore_d1 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Unsafe1",
-                        new EstoreOptions().useUnsafe(true));
-        estore_u2 =
+                        EstoreMetadataTest.class.getName() + "Dfs1",
+                        new EstoreOptions().useDfs(true));
+        estore_d2 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Unsafe2",
-                        new EstoreOptions().useUnsafe(true));
-        estore_u3 =
+                        EstoreMetadataTest.class.getName() + "Dfs2",
+                        new EstoreOptions().useDfs(true));
+        estore_d3 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Unsafe3",
-                        new EstoreOptions().useUnsafe(true));
-        estore_r1 =
+                        EstoreMetadataTest.class.getName() + "Dfs3",
+                        new EstoreOptions().useDfs(true));
+        estore_b1 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Reflection1",
-                        new EstoreOptions().useUnsafe(false));
-        estore_r2 =
+                        EstoreMetadataTest.class.getName() + "Bfs1",
+                        new EstoreOptions().useDfs(false));
+        estore_b2 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Reflection2",
-                        new EstoreOptions().useUnsafe(false));
-        estore1.captureAll(estore_u1);
-        estore1.captureAll(estore_u2);
-        estore1.captureAll(estore_u3);
-        estore1.captureAll(estore_r1);
-        estore1.captureAll(estore_r2);
+                        EstoreMetadataTest.class.getName() + "Bfs2",
+                        new EstoreOptions().useDfs(false));
+        estore1.captureAll(estore_d1);
+        estore1.captureAll(estore_d2);
+        estore1.captureAll(estore_d3);
+        estore1.captureAll(estore_b1);
+        estore1.captureAll(estore_b2);
         Table res =
                 estore1.query(
-                        "MATCH (n: `org.estore.Estore`)-[:options]->(m {useUnsafe: true}) RETURN n");
+                        "MATCH (n: `org.estore.Estore`)-[:options]->(m {useDfs: true}) RETURN n");
         assertEquals(3, res.getSize());
     }
 
     @Test
-    public void testOptionsRepeat() throws Exception {
-        estore_u1 =
+    public void testOptionsRepeat() throws EstoreException {
+        estore_d1 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Unsafe1",
-                        new EstoreOptions().useUnsafe(true));
-        estore_u2 =
+                        EstoreMetadataTest.class.getName() + "Dfs1",
+                        new EstoreOptions().useDfs(true));
+        estore_d2 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Unsafe2",
-                        new EstoreOptions().useUnsafe(true));
-        estore_u3 =
+                        EstoreMetadataTest.class.getName() + "Dfs2",
+                        new EstoreOptions().useDfs(true));
+        estore_d3 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Unsafe3",
-                        new EstoreOptions().useUnsafe(true));
-        estore_r1 =
+                        EstoreMetadataTest.class.getName() + "Dfs3",
+                        new EstoreOptions().useDfs(true));
+        estore_b1 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Reflection1",
-                        new EstoreOptions().useUnsafe(false));
-        estore_r2 =
+                        EstoreMetadataTest.class.getName() + "Bfs1",
+                        new EstoreOptions().useDfs(false));
+        estore_b2 =
                 new Estore(
-                        EstoreMetadataTest.class.getName() + "Reflection2",
-                        new EstoreOptions().useUnsafe(false));
-        estore1.captureAll(estore_u1);
-        estore1.captureAll(estore_u2);
-        estore1.captureAll(estore_u3);
-        estore1.captureAll(estore_r1);
-        estore1.captureAll(estore_r2);
+                        EstoreMetadataTest.class.getName() + "Bfs2",
+                        new EstoreOptions().useDfs(false));
+        estore1.captureAll(estore_d1);
+        estore1.captureAll(estore_d2);
+        estore1.captureAll(estore_d3);
+        estore1.captureAll(estore_b1);
+        estore1.captureAll(estore_b2);
         Table res = null;
         for (int i = 0; i < 5; i++) {
             res =
                     estore1.query(
-                            "MATCH (n: `org.estore.Estore`)-[:options]->(m {useUnsafe: true}) RETURN n");
+                            "MATCH (n: `org.estore.Estore`)-[:options]->(m {useDfs: true}) RETURN n");
         }
         assertEquals(3, res.getSize());
     }
 
     @Test
-    public void testDynamicClass() throws Exception {
+    public void testDynamicClass() throws EstoreException {
         estore2.query("CREATE (n: `Sample`)");
         estore1.captureAll(estore2);
-        // Table res =
-        //     estore1.query(
-        //         "MATCH (n:"
-        //             + "
-        // `org.estore.Estore`)-[:dynamicClasses]->(:`java.util.ArrayList`)-[:elementData]->(m"
-        //             + " {name: 'Sample'}) RETURN m");
         Table res =
                 estore1.query(
                         "MATCH (n:"
@@ -133,7 +126,7 @@ public class EstoreMetadataTest {
     }
 
     @Test
-    public void testDynamicClassRepeat() throws Exception {
+    public void testDynamicClassRepeat() throws EstoreException {
         estore2.query("CREATE (n: `Sample`)");
         estore1.captureAll(estore2);
         Table res = null;
@@ -142,8 +135,6 @@ public class EstoreMetadataTest {
                     estore1.query(
                             "MATCH (n:"
                                     + " `org.estore.Estore`)-[:dynamicClasses]->()-[:elementData]"
-                                    // dynamicClasses is an arraylist of <Class>,
-                                    // but Class doesn't have element data
                                     + "->(m {name: 'Sample'}) RETURN m");
         }
         assertEquals(1, res.getSize());

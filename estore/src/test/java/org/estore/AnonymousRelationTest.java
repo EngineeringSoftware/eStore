@@ -11,12 +11,12 @@ public class AnonymousRelationTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
-        db = new Estore(AnonymousRelationTest.class.getName(), new EstoreOptions().useUnsafe(true));
+    void setUp() {
+        db = new Estore(AnonymousRelationTest.class.getName());
     }
 
     @Test
-    void bareArrowMatchesEmptyBrackets() throws Exception {
+    void bareArrowMatchesEmptyBrackets() throws EstoreException {
         Person bob = new Person("Bob", 30);
         Person alice = new Person("Alice", 28, bob);
         db.captureAll(alice);

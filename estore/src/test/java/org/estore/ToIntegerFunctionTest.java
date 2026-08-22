@@ -11,25 +11,25 @@ public class ToIntegerFunctionTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() throws EstoreException {
         db = new Estore(ToIntegerFunctionTest.class.getName());
         db.captureAll(new Person("A", 20));
     }
 
     @Test
-    void toIntegerConvertsStringLiteral() throws Exception {
+    void toIntegerConvertsStringLiteral() {
         Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN toInteger('9')");
         assertEquals(9, result.get("TOINTEGER(9)").get(0));
     }
 
     @Test
-    void toIntegerConvertsProperty() throws Exception {
+    void toIntegerConvertsProperty() {
         Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN toInteger(p.age)");
         assertEquals(20, result.get("TOINTEGER(p.age)").get(0));
     }
 
     @Test
-    void toIntegerReturnsNullForNonNumericString() throws Exception {
+    void toIntegerReturnsNullForNonNumericString() {
         Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN toInteger('nope')");
         assertEquals(null, result.get("TOINTEGER(nope)").get(0));
     }

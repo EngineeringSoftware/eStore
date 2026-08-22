@@ -20,7 +20,6 @@ import org.estore.planner.LogicalPlan;
 import org.estore.planner.LogicalPlanBuilder;
 import org.estore.planner.util.ClassInfo;
 import org.estore.planner.util.Table;
-import sun.misc.Unsafe;
 
 public class Estore implements Serializable {
     private String name;
@@ -34,7 +33,6 @@ public class Estore implements Serializable {
      */
     private HashMap<String, ClassInfo> runtimeClassInfoMap;
 
-    private Unsafe unsafe;
     private EstoreOptions options;
     private int id;
     private ArrayList<Class> dynamicClasses;
@@ -63,25 +61,19 @@ public class Estore implements Serializable {
         return labelClassInfoMap;
     }
 
-    public Estore(String name) throws Exception {
+    public Estore(String name) {
         this(name, EstoreOptions.getDefaultOptions());
     }
 
-    public Estore(String name, EstoreOptions options) throws Exception {
+    public Estore(String name, EstoreOptions options) {
         this.name = name;
         this.options = options;
-        this.unsafe = null;
         this.id = 0;
         datastore = new HashMap<Long, Object>();
         labelObjectMap = new LabelMap();
         labelClassInfoMap = new HashMap<String, ClassInfo>();
         runtimeClassInfoMap = new HashMap<String, ClassInfo>();
         dynamicClasses = new ArrayList<Class>();
-        if (options.getUseUnsafe()) {
-            Field f = Unsafe.class.getDeclaredField("theUnsafe");
-            f.setAccessible(true);
-            unsafe = (Unsafe) f.get(null);
-        }
     }
 
     public void addDynamicClass(Class<?> klass) {
@@ -121,7 +113,7 @@ public class Estore implements Serializable {
         }
         datastore.put(objHashCode, obj);
         if (labelObjectMap.get(className) == null) {
-            cInfo = labelObjectMap.putNew(objClass, new ArrayList<Object>(), options, unsafe);
+            cInfo = labelObjectMap.putNew(objClass, new ArrayList<Object>());
             labelClassInfoMap.put(className, cInfo);
         }
         labelObjectMap.get(className).add(obj);
@@ -178,15 +170,14 @@ public class Estore implements Serializable {
                 if (current instanceof Class) {
                     if (labelClassInfoMap.get(Class.class.getName()) == null) {
                         ClassInfo classCInfo =
-                                labelObjectMap.putNew(
-                                        Class.class, new ArrayList<>(), options, unsafe);
+                                labelObjectMap.putNew(Class.class, new ArrayList<>());
                         labelClassInfoMap.put(Class.class.getName(), classCInfo);
                     }
                     cInfo = labelClassInfoMap.get(Class.class.getName());
                     labelObjectMap.put(className, labelList);
                     labelClassInfoMap.put(className, cInfo); /* for query execution by label */
                 } else {
-                    cInfo = labelObjectMap.putNew(objClass, labelList, options, unsafe);
+                    cInfo = labelObjectMap.putNew(objClass, labelList);
                     labelClassInfoMap.put(className, cInfo);
                 }
             } else {
@@ -274,15 +265,14 @@ public class Estore implements Serializable {
                 if (current instanceof Class) {
                     if (labelClassInfoMap.get(Class.class.getName()) == null) {
                         ClassInfo classCInfo =
-                                labelObjectMap.putNew(
-                                        Class.class, new ArrayList<>(), options, unsafe);
+                                labelObjectMap.putNew(Class.class, new ArrayList<>());
                         labelClassInfoMap.put(Class.class.getName(), classCInfo);
                     }
                     cInfo = labelClassInfoMap.get(Class.class.getName());
                     labelObjectMap.put(className, labelList);
                     labelClassInfoMap.put(className, cInfo);
                 } else {
-                    cInfo = labelObjectMap.putNew(objClass, labelList, options, unsafe);
+                    cInfo = labelObjectMap.putNew(objClass, labelList);
                     labelClassInfoMap.put(className, cInfo);
                 }
             } else {
@@ -366,15 +356,14 @@ public class Estore implements Serializable {
             ArrayList<Object> labelList = new ArrayList<Object>();
             if (obj instanceof Class) {
                 if (labelClassInfoMap.get(Class.class.getName()) == null) {
-                    ClassInfo classCInfo =
-                            labelObjectMap.putNew(Class.class, new ArrayList<>(), options, unsafe);
+                    ClassInfo classCInfo = labelObjectMap.putNew(Class.class, new ArrayList<>());
                     labelClassInfoMap.put(Class.class.getName(), classCInfo);
                 }
                 cInfo = labelClassInfoMap.get(Class.class.getName());
                 labelObjectMap.put(className, labelList);
                 labelClassInfoMap.put(className, cInfo);
             } else {
-                cInfo = labelObjectMap.putNew(objClass, labelList, options, unsafe);
+                cInfo = labelObjectMap.putNew(objClass, labelList);
                 labelClassInfoMap.put(className, cInfo);
             }
         } else {
@@ -457,15 +446,14 @@ public class Estore implements Serializable {
             ArrayList<Object> labelList = new ArrayList<Object>();
             if (obj instanceof Class) {
                 if (labelClassInfoMap.get(Class.class.getName()) == null) {
-                    ClassInfo classCInfo =
-                            labelObjectMap.putNew(Class.class, new ArrayList<>(), options, unsafe);
+                    ClassInfo classCInfo = labelObjectMap.putNew(Class.class, new ArrayList<>());
                     labelClassInfoMap.put(Class.class.getName(), classCInfo);
                 }
                 cInfo = labelClassInfoMap.get(Class.class.getName());
                 labelObjectMap.put(className, labelList);
                 labelClassInfoMap.put(className, cInfo);
             } else {
-                cInfo = labelObjectMap.putNew(objClass, labelList, options, unsafe);
+                cInfo = labelObjectMap.putNew(objClass, labelList);
                 labelClassInfoMap.put(className, cInfo);
             }
         } else {
@@ -555,7 +543,7 @@ public class Estore implements Serializable {
         String key = clazz.getName();
         ClassInfo cInfo = runtimeClassInfoMap.get(key);
         if (cInfo != null) return cInfo;
-        cInfo = ClassInfo.getClassInfo(options.getUseUnsafe(), unsafe, clazz);
+        cInfo = ClassInfo.getClassInfo(clazz);
         try {
             for (Field f : getDeclaredFieldsIncludingSuper(clazz)) {
                 try {
@@ -694,12 +682,8 @@ public class Estore implements Serializable {
     }
 
     public static class LabelMap extends HashMap<String, ArrayList<Object>> {
-        public ClassInfo putNew(
-                Class classInstance,
-                ArrayList<Object> value,
-                EstoreOptions options,
-                Unsafe unsafe) {
-            ClassInfo cInfo = ClassInfo.getClassInfo(options.getUseUnsafe(), unsafe, classInstance);
+        public ClassInfo putNew(Class classInstance, ArrayList<Object> value) {
+            ClassInfo cInfo = ClassInfo.getClassInfo(classInstance);
             if (classInstance.isArray()) {
                 super.put(classInstance.getName(), value);
                 return cInfo;

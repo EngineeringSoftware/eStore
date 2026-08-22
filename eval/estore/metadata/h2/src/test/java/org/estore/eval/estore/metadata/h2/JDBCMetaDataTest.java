@@ -13,24 +13,25 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.sql.SQLException;
 
 public class JDBCMetaDataTest {
 
   private Connection conn1;
 
   @BeforeEach
-  public void setup() throws Exception {
+  public void setup() throws SQLException {
     conn1 = DriverManager.getConnection("jdbc:h2:mem:h2TestDb1", "sa", "");
   }
 
   @Test
-  public void testH2DbNameQuery() throws Exception {
+  public void testH2DbNameQuery() {
     // placeholder; no api for this query
     System.out.println("Execution Time : 0");
   }
 
   @Test
-  public void testH2TablesQuery() throws Exception {
+  public void testH2TablesQuery() throws SQLException {
     Set<String> tablesSet = new HashSet<>();
 
     // Create a new table and check that it exists
@@ -52,7 +53,7 @@ public class JDBCMetaDataTest {
   }
 
   @Test
-  public void testH2UsersQuery() throws Exception {
+  public void testH2UsersQuery() throws SQLException {
     long t1 = System.nanoTime();
     DatabaseMetaData meta = conn1.getMetaData();
     String userName = meta.getUserName();
@@ -62,7 +63,7 @@ public class JDBCMetaDataTest {
   }
 
   @AfterEach
-  public void drop() throws Exception {
+  public void drop() throws SQLException {
     if (conn1 != null) {
       conn1.close();
     }

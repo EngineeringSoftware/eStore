@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import sun.misc.Unsafe;
 
 public abstract class ClassInfo {
     protected HashMap<String, String> referenceFieldTypeMap;
@@ -14,15 +13,11 @@ public abstract class ClassInfo {
     protected HashMap<String, String> primitiveFieldTypeMap;
     public Class classInstance;
 
-    public static ClassInfo getClassInfo(boolean useUnsafe, Unsafe unsafe, Class classInstance) {
+    public static ClassInfo getClassInfo(Class classInstance) {
         if (classInstance.isArray()) {
             return new ArrayClassInfoReflectionImpl(classInstance);
         }
-        if (useUnsafe) {
-            return new ClassInfoUnsafeImpl(unsafe, classInstance);
-        } else {
-            return new ClassInfoReflectionImpl(classInstance);
-        }
+        return new ClassInfoReflectionImpl(classInstance);
     }
 
     public abstract void addPrimitiveField(Field field);

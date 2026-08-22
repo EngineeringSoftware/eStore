@@ -11,7 +11,7 @@ public class VarLengthRangeTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() throws EstoreException {
         db = new Estore(VarLengthRangeTest.class.getName());
         Person charlie = new Person("Charlie", 25);
         Person bob = new Person("Bob", 30, charlie);
@@ -20,7 +20,7 @@ public class VarLengthRangeTest {
     }
 
     @Test
-    void exactTwoHopsFindsCharlie() throws Exception {
+    void exactTwoHopsFindsCharlie() {
         Table result =
                 db.query(
                         "MATCH (a:`org.estore.example.Person`)-[*2]->(b:`org.estore.example.Person`) RETURN b");
@@ -29,7 +29,7 @@ public class VarLengthRangeTest {
     }
 
     @Test
-    void twoOrMoreHopsFindsCharlie() throws Exception {
+    void twoOrMoreHopsFindsCharlie() {
         Table result =
                 db.query(
                         "MATCH (a:`org.estore.example.Person`)-[*2..]->(b:`org.estore.example.Person`) RETURN b");

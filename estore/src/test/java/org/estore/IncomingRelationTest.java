@@ -11,7 +11,7 @@ public class IncomingRelationTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() throws EstoreException {
         db = new Estore(IncomingRelationTest.class.getName());
         Person bob = new Person("Bob", 30);
         Person alice = new Person("Alice", 28, bob);
@@ -19,7 +19,7 @@ public class IncomingRelationTest {
     }
 
     @Test
-    void incomingTypedEdgeFindsReferrer() throws Exception {
+    void incomingTypedEdgeFindsReferrer() {
         Table result =
                 db.query(
                         "MATCH (b:`org.estore.example.Person`)<-[:friend]-(a:`org.estore.example.Person`) RETURN a");
@@ -28,7 +28,7 @@ public class IncomingRelationTest {
     }
 
     @Test
-    void incomingVarLengthFindsReferrer() throws Exception {
+    void incomingVarLengthFindsReferrer() {
         Table result =
                 db.query(
                         "MATCH (a:`org.estore.example.Person`)<-[*1..2]-(b:`org.estore.example.Person`) RETURN b");

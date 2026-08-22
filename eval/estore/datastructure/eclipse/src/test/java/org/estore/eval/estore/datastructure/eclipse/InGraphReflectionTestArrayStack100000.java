@@ -1,7 +1,6 @@
 package org.estore.eval.estore.datastructure.eclipse;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.concurrent.ThreadLocalRandom;
 import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import org.estore.planner.util.Table;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestArrayStack100000 {
   private Estore estore;
@@ -17,7 +17,7 @@ public class InGraphReflectionTestArrayStack100000 {
   private ArrayList<Long> stackData;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = ThreadLocalRandom.current();
     arrayStack = new ArrayStack();
     stackData = new ArrayList<Long>();
@@ -26,7 +26,7 @@ public class InGraphReflectionTestArrayStack100000 {
       stackData.add(randValue);
       arrayStack.push(randValue);
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(arrayStack);
   }
 

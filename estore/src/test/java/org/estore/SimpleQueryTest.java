@@ -11,7 +11,7 @@ public class SimpleQueryTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         db = new Estore(SimpleQueryTest.class.getName());
     }
 

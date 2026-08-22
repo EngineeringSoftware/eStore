@@ -17,16 +17,13 @@ public class MultiDimensionalArrayTest {
     private ThreadLocalRandom rand;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         rand = ThreadLocalRandom.current();
-        db =
-                new Estore(
-                        MultiDimensionalArrayTest.class.getName(),
-                        new EstoreOptions().useUnsafe(false));
+        db = new Estore(MultiDimensionalArrayTest.class.getName());
     }
 
     @Test
-    public void testSimple3DMatrix() throws Exception {
+    public void testSimple3DMatrix() throws EstoreException {
         String[][][] m = new String[][][] {{{"a", "b"}, {"c", "d"}}, {{"e", "f"}, {"g", "h"}}};
         db.captureAll(m);
 
@@ -39,7 +36,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testLongMatrix2D_varLength() throws Exception {
+    public void testLongMatrix2D_varLength() throws EstoreException {
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 3;
@@ -62,7 +59,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testLongMatrix2D_indexed() throws Exception {
+    public void testLongMatrix2D_indexed() throws EstoreException {
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 2;
@@ -87,7 +84,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testIntMatrix2D_varLength() throws Exception {
+    public void testIntMatrix2D_varLength() throws EstoreException {
         int[][] grid = new int[8][8];
         int target = 4242;
         int ti = 1;
@@ -110,7 +107,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testIntMatrix2D_indexed() throws Exception {
+    public void testIntMatrix2D_indexed() throws EstoreException {
         int[][] grid = new int[8][8];
         int target = 7777;
         int ti = 0;
@@ -135,7 +132,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testObjectMatrix3D_varLength() throws Exception {
+    public void testObjectMatrix3D_varLength() throws EstoreException {
         Object[][][] cube = new Object[4][4][4];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int a = 1;
@@ -164,7 +161,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testObjectMatrix3D_indexed() throws Exception {
+    public void testObjectMatrix3D_indexed() throws EstoreException {
         Object[][][] cube = new Object[3][3][3];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int a = 0;
@@ -196,7 +193,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testCaptureInsertsAllDims() throws Exception {
+    public void testCaptureInsertsAllDims() throws EstoreException {
         Long[][] grid = new Long[2][2];
         grid[0][0] = 1L;
         grid[0][1] = 2L;
@@ -213,7 +210,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testDeleteArrayIndex() throws Exception {
+    public void testDeleteArrayIndex() throws EstoreException {
         Long[] arr = new Long[] {10L, 20L, 30L};
         db.captureAll(arr);
 
@@ -224,8 +221,8 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testArrayTable_unsafe() throws Exception {
-        Estore unsafeStore = new Estore(MultiDimensionalArrayTest.class.getName() + "Unsafe");
+    public void testArrayTable() throws EstoreException {
+        Estore gridStore = new Estore(MultiDimensionalArrayTest.class.getName() + "Unsafe");
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 4;
@@ -235,10 +232,10 @@ public class MultiDimensionalArrayTest {
                 grid[i][j] = (i == ti && j == tj) ? target : rand.nextLong(0, Long.MAX_VALUE);
             }
         }
-        unsafeStore.captureAll(grid);
+        gridStore.captureAll(grid);
 
         Table result =
-                unsafeStore.query(
+                gridStore.query(
                         "MATCH (n:`"
                                 + grid.getClass().getName()
                                 + "`)-[]->()-[]->(m {value:"
@@ -248,11 +245,11 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testArrayTable_dfs() throws Exception {
+    public void testArrayTable_dfs() throws EstoreException {
         Estore dfsStore =
                 new Estore(
                         MultiDimensionalArrayTest.class.getName() + "Dfs",
-                        new EstoreOptions().useUnsafe(false).useDfs(true));
+                        new EstoreOptions().useDfs(true));
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 4;
@@ -275,11 +272,11 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testIntMatrix2D_dfs() throws Exception {
+    public void testIntMatrix2D_dfs() throws EstoreException {
         Estore dfsStore =
                 new Estore(
                         MultiDimensionalArrayTest.class.getName() + "IntDfs",
-                        new EstoreOptions().useUnsafe(false).useDfs(true));
+                        new EstoreOptions().useDfs(true));
         int[][] grid = new int[8][8];
         int target = 4242;
         int ti = 1;

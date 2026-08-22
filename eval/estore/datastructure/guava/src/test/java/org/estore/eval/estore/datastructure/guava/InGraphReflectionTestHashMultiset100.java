@@ -1,7 +1,6 @@
 package org.estore.eval.estore.datastructure.guava;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.concurrent.ThreadLocalRandom;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.HashMultimap;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import org.estore.planner.util.Table;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestHashMultiset100 {
   private Estore estore;
@@ -17,7 +17,7 @@ public class InGraphReflectionTestHashMultiset100 {
   private HashMultimap<Long, Long> multiMap;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = ThreadLocalRandom.current();
     ArrayList<Long> values = new ArrayList<Long>();
     multiMap = HashMultimap.create();
@@ -26,7 +26,7 @@ public class InGraphReflectionTestHashMultiset100 {
       multiMap.put(rand.nextLong(0, Long.MAX_VALUE), rand.nextLong(0, Long.MAX_VALUE));
     }
     multiSet = HashMultiset.create(values);
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(multiMap);
   }
 

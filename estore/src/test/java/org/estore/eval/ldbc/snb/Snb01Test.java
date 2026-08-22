@@ -12,6 +12,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.estore.EstoreOptions;
 import org.estore.compiler.CompileQuery;
 import org.estore.eval.ldbc.snb.util.*;
@@ -24,11 +25,8 @@ public class Snb01Test {
     private Estore estore;
 
     @BeforeEach
-    public void setupData() throws Exception {
-        estore =
-                new Estore(
-                        Snb01Test.class.getName(),
-                        new EstoreOptions().useUnsafe(false).profile(false));
+    public void setupData() throws EstoreException {
+        estore = new Estore(Snb01Test.class.getName(), new EstoreOptions().profile(false));
         readDataSet();
     }
 
@@ -169,7 +167,7 @@ public class Snb01Test {
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
-    public void readDataSet() throws Exception {
+    public void readDataSet() throws EstoreException {
         HashMap<Long, Person> persons = new HashMap<Long, Person>();
         HashMap<Long, Place> places = new HashMap<Long, Place>();
         HashMap<Long, Tag> tags = new HashMap<Long, Tag>();

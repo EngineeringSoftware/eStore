@@ -12,7 +12,7 @@ public class PropertiesFunctionTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() throws EstoreException {
         db = new Estore(PropertiesFunctionTest.class.getName());
         db.captureAll(new Person("A", 20));
     }

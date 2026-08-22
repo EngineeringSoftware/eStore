@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
+import org.estore.EstoreException;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,13 +20,13 @@ public class JCFTest {
     private static ThreadLocalRandom rand;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         rand = ThreadLocalRandom.current();
-        estore = new Estore(JCFTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(JCFTest.class.getName());
     }
 
     @Test
-    public void testArrayList() throws Exception {
+    public void testArrayList() throws EstoreException {
         ArrayList<Long> list = new ArrayList<Long>();
         int ind = rand.nextInt(0, 99);
         for (int j = 0; j < 100; j++) {
@@ -47,7 +47,7 @@ public class JCFTest {
     }
 
     @Test
-    public void testArrayDeque() throws Exception {
+    public void testArrayDeque() throws EstoreException {
         ArrayDeque<Long> list = new ArrayDeque<Long>();
         int ind = rand.nextInt(0, 99);
         for (int j = 0; j < 100; j++) {
@@ -68,7 +68,7 @@ public class JCFTest {
     }
 
     @Test
-    public void testLinkedList() throws Exception {
+    public void testLinkedList() throws EstoreException {
         LinkedList<Long> list = new LinkedList<Long>();
         int ind = rand.nextInt(0, 99);
         for (int j = 0; j < 100; j++) {
@@ -89,7 +89,7 @@ public class JCFTest {
     }
 
     @Test
-    public void testVector() throws Exception {
+    public void testVector() throws EstoreException {
         Vector<Long> list = new Vector<Long>();
         int ind = rand.nextInt(0, 99);
         for (int j = 0; j < 100; j++) {
@@ -110,7 +110,7 @@ public class JCFTest {
     }
 
     @Test
-    public void testHashMap() throws Exception {
+    public void testHashMap() throws EstoreException {
         HashMap<Long, Long> map = new HashMap<Long, Long>();
         while (map.size() != 99) {
             map.put(rand.nextLong(0, Long.MAX_VALUE), rand.nextLong(0, Long.MAX_VALUE));

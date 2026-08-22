@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class CaptureModeTest {
 
     @Test
-    void iterativeDfsCapturesPersonChain() throws Exception {
+    void iterativeDfsCapturesPersonChain() throws EstoreException {
         Estore db = new Estore(CaptureModeTest.class.getName(), new EstoreOptions().useDfs(true));
         Person charlie = new Person("Charlie", 25);
         Person bob = new Person("Bob", 30, charlie);
@@ -21,7 +21,7 @@ public class CaptureModeTest {
     }
 
     @Test
-    void recursiveDfsCapturesPersonChain() throws Exception {
+    void recursiveDfsCapturesPersonChain() throws EstoreException {
         Estore db =
                 new Estore(
                         CaptureModeTest.class.getName(),
@@ -36,7 +36,7 @@ public class CaptureModeTest {
     }
 
     @Test
-    void depthLimitedCaptureStops() throws Exception {
+    void depthLimitedCaptureStops() throws EstoreException {
         Estore db = new Estore(CaptureModeTest.class.getName());
         Person charlie = new Person("Charlie", 25);
         Person bob = new Person("Bob", 30, charlie);

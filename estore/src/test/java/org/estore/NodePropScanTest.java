@@ -11,7 +11,7 @@ public class NodePropScanTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() throws EstoreException {
         db = new Estore(NodePropScanTest.class.getName());
         Person bob = new Person("Bob", 30);
         Person alice = new Person("Alice", 28, bob);

@@ -23,14 +23,7 @@ public class CodeGenTest {
 
     @BeforeEach
     public void initDatabase() {
-        try {
-            estore =
-                    new Estore(
-                            CodeGenTest.class.getName(),
-                            new EstoreOptions().useUnsafe(true).useDfs(false));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        estore = new Estore(CodeGenTest.class.getName(), new EstoreOptions().useDfs(false));
     }
 
     @Test
@@ -205,7 +198,7 @@ public class CodeGenTest {
     }
 
     @Test
-    void testNodeAddPropertyCypher2() throws Exception {
+    void testNodeAddPropertyCypher2() throws ReflectiveOperationException {
         Table result = estore.query("CREATE (n:`DummyClass4` {name:'Uki', age:30}) RETURN n");
         Object obj = result.get("n").get(0);
         Class objClass = obj.getClass();

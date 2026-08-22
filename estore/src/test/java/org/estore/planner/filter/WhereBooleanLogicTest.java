@@ -3,7 +3,7 @@ package org.estore.planner.filter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
+import org.estore.EstoreException;
 import org.estore.example.Person;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,15 +13,12 @@ class WhereBooleanLogicTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
-        db =
-                new Estore(
-                        WhereBooleanLogicTest.class.getName() + "_" + System.nanoTime(),
-                        new EstoreOptions().useUnsafe(true));
+    void setUp() {
+        db = new Estore(WhereBooleanLogicTest.class.getName() + "_" + System.nanoTime());
     }
 
     @Test
-    void queryWhereAnd_requiresBothPredicatesTrue() throws Exception {
+    void queryWhereAnd_requiresBothPredicatesTrue() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 15));
         Table result =
                 db.query(
@@ -30,7 +27,7 @@ class WhereBooleanLogicTest {
     }
 
     @Test
-    void queryWhereOr_keepsRowsWhenEitherPredicateIsTrue() throws Exception {
+    void queryWhereOr_keepsRowsWhenEitherPredicateIsTrue() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 15), new Person("Carl", 20));
         Table result =
                 db.query(
@@ -39,7 +36,7 @@ class WhereBooleanLogicTest {
     }
 
     @Test
-    void queryWhereXor_keepsRowsWhenExactlyOnePredicateIsTrue() throws Exception {
+    void queryWhereXor_keepsRowsWhenExactlyOnePredicateIsTrue() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 17), new Person("Alice", 15));
         Table result =
                 db.query(
@@ -48,7 +45,7 @@ class WhereBooleanLogicTest {
     }
 
     @Test
-    void queryWhereNot_invertsPredicateTruthValue() throws Exception {
+    void queryWhereNot_invertsPredicateTruthValue() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 15));
         Table result =
                 db.query(
@@ -56,7 +53,7 @@ class WhereBooleanLogicTest {
         assertEquals(1, result.getSize());
     }
 
-    private void capturePeople(Person... people) throws Exception {
+    private void capturePeople(Person... people) throws EstoreException {
         for (Person person : people) {
             db.captureAll(person);
         }

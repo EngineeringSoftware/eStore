@@ -1,13 +1,13 @@
 package org.estore.eval.estore.datastructure.jcf;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.estore.planner.util.Table;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestHashMap10000 {
   private Estore estore;
@@ -15,14 +15,14 @@ public class InGraphReflectionTestHashMap10000 {
   private HashMap<Long, Long> map;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = ThreadLocalRandom.current();
     map = new HashMap<Long, Long>();
     while (map.size() != 9999) {
       map.put(rand.nextLong(0, Long.MAX_VALUE), rand.nextLong(0, Long.MAX_VALUE));
     }
     map.put(rand.nextLong(0, Long.MAX_VALUE), 90L);
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(map);
   }
 

@@ -1,7 +1,6 @@
 package org.estore.eval.estore.datastructure.eclipse;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.concurrent.ThreadLocalRandom;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import org.estore.planner.util.Table;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestUnifiedMap1000 {
   private Estore estore;
@@ -17,7 +17,7 @@ public class InGraphReflectionTestUnifiedMap1000 {
   private ArrayList<Long> setData;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = ThreadLocalRandom.current();
     setData = new ArrayList<Long>();
     unifiedMap = new UnifiedMap();
@@ -26,7 +26,7 @@ public class InGraphReflectionTestUnifiedMap1000 {
       unifiedMap.put(rand.nextLong(0, Long.MAX_VALUE), randValue);
       setData.add(randValue);
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(unifiedMap);
   }
 

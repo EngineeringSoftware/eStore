@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
+import org.estore.EstoreException;
 import org.estore.example.Person;
 import org.estore.planner.expressions.LogicalExpr;
 import org.estore.planner.expressions.function.FunctionInvocationExpr;
@@ -23,15 +23,12 @@ class EqualsRelationExprTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
-        db =
-                new Estore(
-                        EqualsRelationExprTest.class.getName() + "_" + System.nanoTime(),
-                        new EstoreOptions().useUnsafe(true));
+    void setUp() {
+        db = new Estore(EqualsRelationExprTest.class.getName() + "_" + System.nanoTime());
     }
 
     @Test
-    void queryWherePropertyEqualsLiteralKeepsMatchingRow() throws Exception {
+    void queryWherePropertyEqualsLiteralKeepsMatchingRow() throws EstoreException {
         db.captureAll(new Person("Alice", 17));
         Table result =
                 db.query("MATCH (p:`org.estore.example.Person`) WHERE p.name = 'Alice' RETURN p");
@@ -39,7 +36,7 @@ class EqualsRelationExprTest {
     }
 
     @Test
-    void queryWherePropertyEqualsLiteralExcludesNonMatchingRow() throws Exception {
+    void queryWherePropertyEqualsLiteralExcludesNonMatchingRow() throws EstoreException {
         db.captureAll(new Person("Alice", 17));
         Table result =
                 db.query("MATCH (p:`org.estore.example.Person`) WHERE p.name = 'Bob' RETURN p");
@@ -47,7 +44,7 @@ class EqualsRelationExprTest {
     }
 
     @Test
-    void queryWherePropertyNotEqualsLiteralFiltersExpectedRows() throws Exception {
+    void queryWherePropertyNotEqualsLiteralFiltersExpectedRows() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 15));
         Table result =
                 db.query("MATCH (p:`org.estore.example.Person`) WHERE p.name <> 'Alice' RETURN p");
@@ -55,34 +52,34 @@ class EqualsRelationExprTest {
     }
 
     @Test
-    void queryWherePropertyLessThanLiteralFiltersExpectedRows() throws Exception {
+    void queryWherePropertyLessThanLiteralFiltersExpectedRows() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 15));
         Table result = db.query("MATCH (p:`org.estore.example.Person`) WHERE p.age < 17 RETURN p");
         assertEquals(1, result.getSize());
     }
 
     @Test
-    void queryWherePropertyLessThanOrEqualsLiteralFiltersExpectedRows() throws Exception {
+    void queryWherePropertyLessThanOrEqualsLiteralFiltersExpectedRows() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 15));
         Table result = db.query("MATCH (p:`org.estore.example.Person`) WHERE p.age <= 15 RETURN p");
         assertEquals(1, result.getSize());
     }
 
     @Test
-    void queryWherePropertyGreaterThanLiteralFiltersExpectedRows() throws Exception {
+    void queryWherePropertyGreaterThanLiteralFiltersExpectedRows() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 15));
         Table result = db.query("MATCH (p:`org.estore.example.Person`) WHERE p.age > 15 RETURN p");
         assertEquals(1, result.getSize());
     }
 
     @Test
-    void queryWherePropertyGreaterThanOrEqualsLiteralFiltersExpectedRows() throws Exception {
+    void queryWherePropertyGreaterThanOrEqualsLiteralFiltersExpectedRows() throws EstoreException {
         capturePeople(new Person("Alice", 17), new Person("Bob", 15));
         Table result = db.query("MATCH (p:`org.estore.example.Person`) WHERE p.age >= 17 RETURN p");
         assertEquals(1, result.getSize());
     }
 
-    private void capturePeople(Person... people) throws Exception {
+    private void capturePeople(Person... people) throws EstoreException {
         for (Person person : people) {
             db.captureAll(person);
         }

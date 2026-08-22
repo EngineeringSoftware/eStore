@@ -1,13 +1,13 @@
 package org.estore.eval.estore.datastructure.jcf;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.Random;
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.estore.planner.util.Table;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestArrayList1000 {
   private Estore estore;
@@ -15,13 +15,13 @@ public class InGraphReflectionTestArrayList1000 {
   private ArrayList<Long> list;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = new Random();
     list = new ArrayList<Long>();
     for (int j = 0; j < 1000; j++) {
       list.add(rand.nextLong());
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(list);
   }
 

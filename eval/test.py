@@ -77,7 +77,6 @@ DATASETS : Dict[str, DataSet] = {"LDBC-SNB-0.1" : LDBC_SNB("LDBC-SNB-0.1"),
 SYSTEMS : Dict[str, str] = {"neo4j-server"       : "Neo4jServerTest",
                             "neo4j-impermanant"  : "Neo4jImpermanantTest",
                             "ingraph-reflection" : "InGraphReflectionTest",
-                            "ingraph-unsafe"     : "InGraphUnsafeTest",
                             "estore-neo"            : "EstoreNeoTest",
                             "estore-mem"            : "EstoreMemTest",
                             "memgraph-server"    : "MemgraphServerTest",
@@ -99,7 +98,7 @@ def exec_datastructure(project : str,
         queries = PROJECT.queries
     #fi
     if systems is None:
-        systems = ["ingraph-reflection", "ingraph-unsafe"]
+        systems = ["ingraph-reflection"]
     #fi
     if datastructures is None:
         datastructures = project2.data_structures
@@ -260,14 +259,13 @@ def exec_usecase(usecase : str,
         return
     #fi
     if impls is None:
-        impls = ["ingraph-reflection", "ingraph-unsafe", "jdbc"]
+        impls = ["ingraph-reflection", "jdbc"]
     #fi
     if queries is None:
         queries = ["dbname", "tables", "users"]
     #fi
     
     impl_test_map : Dict[str, str] = {"ingraph-reflection" : "InGraphReflectionMetaDataTest",
-                                     "ingraph-unsafe" : "InGraphUnsafeMetaDataTest",
                                      "jdbc" : "JDBCMetaDataTest"}
     
     query_method_map : Dict[str, str] = {"dbname" : "testH2DbNameQuery",
@@ -363,7 +361,7 @@ if __name__ == "__main__":
     parser.add_argument("--h2impls",
                         help="H2 query implementation to use",
                         required = False,
-                        choices=["ingraph-reflection", "ingraph-unsafe", "jdbc"],
+                        choices=["ingraph-reflection", "jdbc"],
                         nargs=1,)
     parser.add_argument("--usecase",
                         help="Use case to evaluate",
