@@ -1,0 +1,9 @@
+.git
+**/target
+eval/
+.cursor/
+*.iml
+.idea/
+.vscode/
+.DS_Store
+**/.DS_Store
