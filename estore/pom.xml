@@ -211,7 +211,7 @@
         <jdk>[9,)</jdk>
       </activation>
       <properties>
-        <test.jvm.add.opens>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.util.concurrent=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.sql=ALL-UNNAMED --add-opens jdk.unsupported/sun.misc=ALL-UNNAMED</test.jvm.add.opens>
+        <test.jvm.add.opens>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.util.concurrent=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.sql=ALL-UNNAMED</test.jvm.add.opens>
       </properties>
     </profile>
   </profiles>
