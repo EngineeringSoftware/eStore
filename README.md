@@ -12,33 +12,20 @@ is a table of references to objects on the heap, which users can
 manipulate the same way as any other object on the heap in their
 programs.
 
-## Requirements
+## Docker
 
-- Java 8
-- Maven
-- wget, zstd, tar, gzip
-- `nc` (netcat) for the TCP query demo
-
-We also provide a Docker image with Java 8, Maven, and an installed
-eStore repository. Build and run it with:
+If you want to run in an isolated container, skip installing Java,
+Maven, and the other tools in Prerequisites. Docker installs those
+dependencies and ϵStore during the build. Start a shell with:
 
 ```bash
 docker build -t estore .
 docker run --rm -it -p 1234:1234 estore
 ```
 
-## Install
-
-```bash
-./s install_estore
-```
-
-This runs dependency checks, downloads test data, and installs
-the `estore` Maven module. See
-[Getting Started](#getting-started-with-development) for a fuller
-local workflow. After install, start the TCP query server with
-`./s exec_estore`, then query it with
-`echo 'MATCH (n) RETURN n' | nc localhost 1234`.
+Port 1234 is mapped to the host. Inside the container, run
+`./s exec_estore` and query the server as described under Running the
+Application.
 
 ## Examples
 
