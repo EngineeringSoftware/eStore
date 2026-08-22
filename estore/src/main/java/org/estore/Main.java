@@ -10,11 +10,9 @@ public class Main {
     public static void main(String[] args) {
         boolean exit = false;
         int port = 1234;
-        boolean unsafeFlag = false;
         if (args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
-                unsafeFlag = Boolean.parseBoolean(args[1]);
             } catch (Exception e) {
                 System.err.println("Invalid argument");
                 System.exit(1);
@@ -22,7 +20,7 @@ public class Main {
         }
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            Estore estore = new Estore("testDb", new EstoreOptions().useUnsafe(unsafeFlag));
+            Estore estore = new Estore("testDb");
             while (!exit) {
                 try (Socket clientSocket = serverSocket.accept();
                         BufferedReader in =

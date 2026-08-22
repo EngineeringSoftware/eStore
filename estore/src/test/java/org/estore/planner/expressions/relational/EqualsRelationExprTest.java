@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import org.estore.example.Person;
 import org.estore.planner.expressions.LogicalExpr;
 import org.estore.planner.expressions.function.FunctionInvocationExpr;
@@ -24,10 +23,7 @@ class EqualsRelationExprTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db =
-                new Estore(
-                        EqualsRelationExprTest.class.getName() + "_" + System.nanoTime(),
-                        new EstoreOptions().useUnsafe(true));
+        db = new Estore(EqualsRelationExprTest.class.getName() + "_" + System.nanoTime());
     }
 
     @Test

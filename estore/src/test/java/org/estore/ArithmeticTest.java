@@ -11,7 +11,7 @@ public class ArithmeticTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(ArithmeticTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(ArithmeticTest.class.getName());
     }
 
     @Test

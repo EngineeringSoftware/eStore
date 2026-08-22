@@ -12,6 +12,21 @@ is a table of references to objects on the heap, which users can
 manipulate the same way as any other object on the heap in their
 programs.
 
+## Docker
+
+If you want to run in an isolated container, skip installing Java,
+Maven, and the other tools in Prerequisites. Docker installs those
+dependencies and ϵStore during the build. Start a shell with:
+
+```bash
+docker build -t estore .
+docker run --rm -it -p 1234:1234 estore
+```
+
+Port 1234 is mapped to the host. Inside the container, run
+`./s exec_estore` and query the server as described under Running the
+Application.
+
 ## Examples
 
 1. Capturing a Java object graph and querying it with Cypher-like syntax.
@@ -21,7 +36,7 @@ programs.
    Person bob = new Person("Bob", 30, charlie);
    Person alice = new Person("Alice", 28, bob);
 
-   Estore db = new Estore("exampleDb", new EstoreOptions().useUnsafe(false));
+   Estore db = new Estore("exampleDb");
    db.captureAll(alice);
 
    // MATCH finds Person objects; RETURN puts them in column p

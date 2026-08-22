@@ -30,7 +30,7 @@ public class InGraphReflectionTestArrayTable1000 {
         table.put(j, k, rand.nextLong(0, Long.MAX_VALUE));
       }
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(table);
   }
 

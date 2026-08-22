@@ -22,7 +22,7 @@ public class InGraphReflectionTestHashMap100000 {
       map.put(rand.nextLong(0, Long.MAX_VALUE), rand.nextLong(0, Long.MAX_VALUE));
     }
     map.put(rand.nextLong(0, Long.MAX_VALUE), 90L);
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(map);
   }
 

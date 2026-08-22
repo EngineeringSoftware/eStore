@@ -24,7 +24,7 @@ public class InGraphReflectionTest01 {
 
   @BeforeEach
   public void setupData() throws Exception {
-    estore = new Estore("myDb", new EstoreOptions().useUnsafe(false).profile(true));
+    estore = new Estore("myDb", new EstoreOptions().profile(true));
     readDataSet();
   }
 

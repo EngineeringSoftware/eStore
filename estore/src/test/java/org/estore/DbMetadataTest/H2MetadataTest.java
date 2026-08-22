@@ -25,15 +25,12 @@ public class H2MetadataTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        String unsafeOpt = System.getProperty("useUnsafe");
-        Boolean unsafeFlag = (unsafeOpt != null) && (unsafeOpt.equals("true"));
         String profileOpt = System.getProperty("profile");
         profileFlag = (profileOpt != null) && (profileOpt.equals("true"));
 
         estore1 =
                 new Estore(
-                        H2MetadataTest.class.getName(),
-                        new EstoreOptions().useUnsafe(unsafeFlag).profile(profileFlag));
+                        H2MetadataTest.class.getName(), new EstoreOptions().profile(profileFlag));
         Class.forName("org.h2.Driver");
         h2Conn1 = DriverManager.getConnection("jdbc:h2:mem:h2TestDb1", "sa", "");
     }

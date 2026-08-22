@@ -3,7 +3,6 @@ package org.estore.planner.filter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import org.estore.example.Person;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +13,7 @@ class WhereBooleanLogicTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db =
-                new Estore(
-                        WhereBooleanLogicTest.class.getName() + "_" + System.nanoTime(),
-                        new EstoreOptions().useUnsafe(true));
+        db = new Estore(WhereBooleanLogicTest.class.getName() + "_" + System.nanoTime());
     }
 
     @Test

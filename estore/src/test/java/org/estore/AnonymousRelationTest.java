@@ -12,7 +12,7 @@ public class AnonymousRelationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(AnonymousRelationTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(AnonymousRelationTest.class.getName());
     }
 
     @Test

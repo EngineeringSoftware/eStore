@@ -24,10 +24,7 @@ public class CodeGenTest {
     @BeforeEach
     public void initDatabase() {
         try {
-            estore =
-                    new Estore(
-                            CodeGenTest.class.getName(),
-                            new EstoreOptions().useUnsafe(true).useDfs(false));
+            estore = new Estore(CodeGenTest.class.getName(), new EstoreOptions().useDfs(false));
         } catch (Exception e) {
             e.printStackTrace();
         }

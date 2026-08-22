@@ -26,7 +26,7 @@ public class InGraphReflectionTestArrayStack100 {
       stackData.add(randValue);
       arrayStack.push(randValue);
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(arrayStack);
   }
 
