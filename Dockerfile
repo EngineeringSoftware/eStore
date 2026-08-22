@@ -1,7 +1,9 @@
-FROM eclipse-temurin:8-jdk
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        maven wget zstd netcat-openbsd \
+        openjdk-8-jdk maven wget zstd netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /estore
