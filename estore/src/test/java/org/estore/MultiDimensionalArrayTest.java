@@ -36,7 +36,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testLongMatrix2D_varLength() throws EstoreException {
+    public void testLongMatrix2DVarLength() throws EstoreException {
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 3;
@@ -59,7 +59,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testLongMatrix2D_indexed() throws EstoreException {
+    public void testLongMatrix2DIndexed() throws EstoreException {
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 2;
@@ -84,7 +84,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testIntMatrix2D_varLength() throws EstoreException {
+    public void testIntMatrix2DVarLength() throws EstoreException {
         int[][] grid = new int[8][8];
         int target = 4242;
         int ti = 1;
@@ -107,7 +107,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testIntMatrix2D_indexed() throws EstoreException {
+    public void testIntMatrix2DIndexed() throws EstoreException {
         int[][] grid = new int[8][8];
         int target = 7777;
         int ti = 0;
@@ -132,7 +132,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testObjectMatrix3D_varLength() throws EstoreException {
+    public void testObjectMatrix3DVarLength() throws EstoreException {
         Object[][][] cube = new Object[4][4][4];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int a = 1;
@@ -161,7 +161,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testObjectMatrix3D_indexed() throws EstoreException {
+    public void testObjectMatrix3DIndexed() throws EstoreException {
         Object[][][] cube = new Object[3][3][3];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int a = 0;
@@ -245,7 +245,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testArrayTable_dfs() throws EstoreException {
+    public void testArrayTableDfs() throws EstoreException {
         Estore dfsStore =
                 new Estore(
                         MultiDimensionalArrayTest.class.getName() + "Dfs",
@@ -272,7 +272,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testIntMatrix2D_dfs() throws EstoreException {
+    public void testIntMatrix2DDfs() throws EstoreException {
         Estore dfsStore =
                 new Estore(
                         MultiDimensionalArrayTest.class.getName() + "IntDfs",
