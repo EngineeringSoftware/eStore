@@ -12,7 +12,7 @@ public class ToIntegerFunctionTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(ToIntegerFunctionTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(ToIntegerFunctionTest.class.getName());
         db.captureAll(new Person("A", 20));
     }
 

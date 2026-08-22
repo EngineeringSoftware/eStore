@@ -10,10 +10,7 @@ public class CaptureModeTest {
 
     @Test
     void iterativeDfsCapturesPersonChain() throws Exception {
-        Estore db =
-                new Estore(
-                        CaptureModeTest.class.getName(),
-                        new EstoreOptions().useUnsafe(true).useDfs(true));
+        Estore db = new Estore(CaptureModeTest.class.getName(), new EstoreOptions().useDfs(true));
         Person charlie = new Person("Charlie", 25);
         Person bob = new Person("Bob", 30, charlie);
         Person alice = new Person("Alice", 28, bob);
@@ -28,7 +25,7 @@ public class CaptureModeTest {
         Estore db =
                 new Estore(
                         CaptureModeTest.class.getName(),
-                        new EstoreOptions().useUnsafe(true).useDfs(true).useRecursion(true));
+                        new EstoreOptions().useDfs(true).useRecursion(true));
         Person charlie = new Person("Charlie", 25);
         Person bob = new Person("Bob", 30, charlie);
         Person alice = new Person("Alice", 28, bob);
@@ -40,8 +37,7 @@ public class CaptureModeTest {
 
     @Test
     void depthLimitedCaptureStops() throws Exception {
-        Estore db =
-                new Estore(CaptureModeTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        Estore db = new Estore(CaptureModeTest.class.getName());
         Person charlie = new Person("Charlie", 25);
         Person bob = new Person("Bob", 30, charlie);
         Person alice = new Person("Alice", 28, bob);

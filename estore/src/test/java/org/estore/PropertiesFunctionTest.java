@@ -13,10 +13,7 @@ public class PropertiesFunctionTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db =
-                new Estore(
-                        PropertiesFunctionTest.class.getName(),
-                        new EstoreOptions().useUnsafe(true));
+        db = new Estore(PropertiesFunctionTest.class.getName());
         db.captureAll(new Person("A", 20));
     }
 

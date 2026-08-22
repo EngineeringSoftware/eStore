@@ -225,10 +225,7 @@ public class MultiDimensionalArrayTest {
 
     @Test
     public void testArrayTable_unsafe() throws Exception {
-        Estore unsafeStore =
-                new Estore(
-                        MultiDimensionalArrayTest.class.getName() + "Unsafe",
-                        new EstoreOptions().useUnsafe(true));
+        Estore unsafeStore = new Estore(MultiDimensionalArrayTest.class.getName() + "Unsafe");
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 4;

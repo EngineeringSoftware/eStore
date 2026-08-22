@@ -12,7 +12,7 @@ public class SimpleQueryTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(SimpleQueryTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(SimpleQueryTest.class.getName());
     }
 
     @Test

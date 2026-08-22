@@ -12,7 +12,7 @@ public class VarLengthRangeTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(VarLengthRangeTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(VarLengthRangeTest.class.getName());
         Person charlie = new Person("Charlie", 25);
         Person bob = new Person("Bob", 30, charlie);
         Person alice = new Person("Alice", 28, bob);

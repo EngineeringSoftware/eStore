@@ -12,7 +12,7 @@ public class NodePropScanTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(NodePropScanTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(NodePropScanTest.class.getName());
         Person bob = new Person("Bob", 30);
         Person alice = new Person("Alice", 28, bob);
         db.captureAll(alice);
