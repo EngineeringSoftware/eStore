@@ -12,7 +12,7 @@ public class ToIntegerFunctionTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(ToIntegerFunctionTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(ToIntegerFunctionTest.class.getName());
         db.captureAll(new Person("A", 20));
     }
 
@@ -20,5 +20,17 @@ public class ToIntegerFunctionTest {
     void toIntegerConvertsStringLiteral() throws Exception {
         Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN toInteger('9')");
         assertEquals(9, result.get("TOINTEGER(9)").get(0));
+    }
+
+    @Test
+    void toIntegerConvertsProperty() throws Exception {
+        Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN toInteger(p.age)");
+        assertEquals(20, result.get("TOINTEGER(p.age)").get(0));
+    }
+
+    @Test
+    void toIntegerReturnsNullForNonNumericString() throws Exception {
+        Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN toInteger('nope')");
+        assertEquals(null, result.get("TOINTEGER(nope)").get(0));
     }
 }

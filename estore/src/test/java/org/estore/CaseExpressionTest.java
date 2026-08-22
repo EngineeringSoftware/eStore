@@ -12,7 +12,7 @@ public class CaseExpressionTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(CaseExpressionTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(CaseExpressionTest.class.getName());
         db.captureAll(new Person("A", 20));
     }
 
@@ -30,5 +30,21 @@ public class CaseExpressionTest {
                 db.query(
                         "MATCH (p:`org.estore.example.Person`) RETURN CASE WHEN p.age > 15 THEN 1 ELSE 0 END");
         assertEquals(1L, result.get("CASE").get(0));
+    }
+
+    @Test
+    void caseMatchesSubject() throws Exception {
+        Table result =
+                db.query(
+                        "MATCH (p:`org.estore.example.Person`) RETURN CASE p.name WHEN 'A' THEN 1 ELSE 0 END");
+        assertEquals(1L, result.get("CASE").get(0));
+    }
+
+    @Test
+    void caseWithoutElseIsNullWhenNoWhenMatches() throws Exception {
+        Table result =
+                db.query(
+                        "MATCH (p:`org.estore.example.Person`) RETURN CASE WHEN p.age > 99 THEN 1 END");
+        assertEquals(null, result.get("CASE").get(0));
     }
 }

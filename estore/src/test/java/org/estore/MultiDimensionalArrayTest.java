@@ -225,10 +225,7 @@ public class MultiDimensionalArrayTest {
 
     @Test
     public void testArrayTable_unsafe() throws Exception {
-        Estore unsafeStore =
-                new Estore(
-                        MultiDimensionalArrayTest.class.getName() + "Unsafe",
-                        new EstoreOptions().useUnsafe(true));
+        Estore unsafeStore = new Estore(MultiDimensionalArrayTest.class.getName() + "Unsafe");
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 4;
@@ -248,5 +245,59 @@ public class MultiDimensionalArrayTest {
                                 + target
                                 + "}) RETURN m");
         assertEquals(target, ((Long) result.get("m").get(0)).longValue());
+    }
+
+    @Test
+    public void testArrayTable_dfs() throws Exception {
+        Estore dfsStore =
+                new Estore(
+                        MultiDimensionalArrayTest.class.getName() + "Dfs",
+                        new EstoreOptions().useUnsafe(false).useDfs(true));
+        Long[][] grid = new Long[10][10];
+        long target = rand.nextLong(0, Long.MAX_VALUE);
+        int ti = 4;
+        int tj = 6;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                grid[i][j] = (i == ti && j == tj) ? target : rand.nextLong(0, Long.MAX_VALUE);
+            }
+        }
+        dfsStore.captureAll(grid);
+
+        Table result =
+                dfsStore.query(
+                        "MATCH (n:`"
+                                + grid.getClass().getName()
+                                + "`)-[]->()-[]->(m {value:"
+                                + target
+                                + "}) RETURN m");
+        assertEquals(target, ((Long) result.get("m").get(0)).longValue());
+    }
+
+    @Test
+    public void testIntMatrix2D_dfs() throws Exception {
+        Estore dfsStore =
+                new Estore(
+                        MultiDimensionalArrayTest.class.getName() + "IntDfs",
+                        new EstoreOptions().useUnsafe(false).useDfs(true));
+        int[][] grid = new int[8][8];
+        int target = 4242;
+        int ti = 1;
+        int tj = 4;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                grid[i][j] = (i == ti && j == tj) ? target : rand.nextInt(0, 10000);
+            }
+        }
+        dfsStore.captureAll(grid);
+
+        Table result =
+                dfsStore.query(
+                        "MATCH (n:`"
+                                + grid.getClass().getName()
+                                + "`)-[]->()-[]->(m {value:"
+                                + target
+                                + "}) RETURN m");
+        assertEquals(target, ((Integer) result.get("m").get(0)).intValue());
     }
 }

@@ -605,6 +605,14 @@ public class LogicalPlanBuilder extends CypherBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitOC_Atom(CypherParser.OC_AtomContext ctx) {
+        if (ctx.COUNT() != null) {
+            return new CountFunctionExpr();
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Object visitOC_FunctionInvocation(CypherParser.OC_FunctionInvocationContext ctx) {
         LogicalExpr expr = null;
         List<LogicalExpr> args = null;
