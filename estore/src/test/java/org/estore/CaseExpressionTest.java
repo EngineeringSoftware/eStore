@@ -12,7 +12,7 @@ public class CaseExpressionTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        db = new Estore(CaseExpressionTest.class.getName(), new EstoreOptions().useUnsafe(true));
+        db = new Estore(CaseExpressionTest.class.getName());
         db.captureAll(new Person("A", 20));
     }
 

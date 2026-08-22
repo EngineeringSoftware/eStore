@@ -21,7 +21,7 @@ public class InGraphReflectionTestFastList100000 {
     for (int j = 0; j < 100000; j++) {
       fastList.add(rand.nextLong(0, Long.MAX_VALUE));
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(fastList);
   }
 

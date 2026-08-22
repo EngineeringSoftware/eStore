@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ public class JCFTest {
     @BeforeEach
     public void setup() throws Exception {
         rand = ThreadLocalRandom.current();
-        estore = new Estore(JCFTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(JCFTest.class.getName());
     }
 
     @Test

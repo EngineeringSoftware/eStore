@@ -26,7 +26,7 @@ public class InGraphReflectionTestUnifiedMap100 {
       unifiedMap.put(rand.nextLong(0, Long.MAX_VALUE), randValue);
       setData.add(randValue);
     }
-    estore = new Estore("testDb", new EstoreOptions().useUnsafe(false));
+    estore = new Estore("testDb");
     estore.captureAll(unifiedMap);
   }
 

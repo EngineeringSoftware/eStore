@@ -28,7 +28,6 @@ def generate_json(data_type):
         queries = ["getCatalogs", "getSchemas", "getTables"]
         implementations = {
             "egraph-reflection": "\\ToolReflection",
-            "egraph-unsafe": "\\ToolUnsafe",
             "jdbc": "\\JDBC"
         }
         test_class = "H2MetadataTest"
@@ -36,7 +35,6 @@ def generate_json(data_type):
         queries = ["dbName", "options", "dynamicClass"]
         implementations = {
             "egraph-reflection": "\\ToolReflection",
-            "egraph-unsafe": "\\ToolUnsafe",
         }
         test_class = "EstoreMetadataTest"
     
@@ -61,10 +59,9 @@ def generate_json(data_type):
                     }
                 }
             else:
-                use_unsafe = "true" if impl == "egraph-unsafe" else "false"
                 queryName = query[0].upper() + query[1:] if data_type == 'egraph' else query[3:]
                 suffix = "ESTORE" if data_type == 'h2' else ""
-                command = f"mvn test -Dtest={test_class}#test{queryName}{suffix}Repeat -DuseUnsafe={use_unsafe} -Dprofile=true"
+                command = f"mvn test -Dtest={test_class}#test{queryName}{suffix}Repeat -Dprofile=true"
                 # print(command)
                 metrics = ["Parse Tree Generation Time", "Query Plan AST Building Time", "Query Execution Time", "Total Query Time"]
                 metric_data = {metric: [] for metric in metrics}

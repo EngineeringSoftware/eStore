@@ -22,7 +22,7 @@ public class InGraphReflectionMetaDataTest {
 
   @BeforeEach
   public void setup() throws Exception {
-    estore1 = new Estore("estoreTestDb1", new EstoreOptions().useUnsafe(false));
+    estore1 = new Estore("estoreTestDb1");
     conn1 = DriverManager.getConnection("jdbc:h2:mem:h2TestDb1", "sa", "");
   }
 

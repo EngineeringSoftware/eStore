@@ -11,7 +11,6 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ public class EclipseTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        estore = new Estore(EclipseTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(EclipseTest.class.getName());
         rand = ThreadLocalRandom.current();
     }
 

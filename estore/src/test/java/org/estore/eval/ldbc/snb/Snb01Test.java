@@ -25,10 +25,7 @@ public class Snb01Test {
 
     @BeforeEach
     public void setupData() throws Exception {
-        estore =
-                new Estore(
-                        Snb01Test.class.getName(),
-                        new EstoreOptions().useUnsafe(false).profile(false));
+        estore = new Estore(Snb01Test.class.getName(), new EstoreOptions().profile(false));
         readDataSet();
     }
 

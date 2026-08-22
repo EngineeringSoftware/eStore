@@ -17,9 +17,7 @@ public class DualHashBidiMapTest {
 
     @BeforeEach
     public void initDatabase() throws Exception {
-        estore =
-                new Estore(
-                        DualHashBidiMapTest.class.getName(), new EstoreOptions().useUnsafe(false));
+        estore = new Estore(DualHashBidiMapTest.class.getName(), new EstoreOptions());
         size = 10;
     }
 
