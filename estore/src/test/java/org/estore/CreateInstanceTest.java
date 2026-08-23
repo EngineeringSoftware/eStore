@@ -427,6 +427,18 @@ public class CreateInstanceTest {
     }
 
     @Test
+    void createObjectWithManyTypes() throws EstoreException {
+        estore.query("CREATE (n:`ValManyTypes` {i: 30, d: 30.0, s: 'something'}) RETURN n");
+        Table result = estore.query("MATCH (n:`ValManyTypes`) RETURN n");
+
+        assertEquals(1, result.getSize());
+        Object obj = result.get("n").get(0);
+        assertEquals(30, estore.getLong(obj, "i"));
+        assertEquals(30.0, estore.getDouble(obj, "d"), 0.01);
+        assertEquals("something", estore.getString(obj, "s"));
+    }
+
+    @Test
     void testArrayList() throws EstoreException {
         ArrayList<Long> a = new ArrayList<Long>();
         a.add(10L);

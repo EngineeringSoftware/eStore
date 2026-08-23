@@ -721,6 +721,21 @@ public class LogicalPlanBuilder extends CypherBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitOC_DoubleLiteral(CypherParser.OC_DoubleLiteralContext ctx) {
+        if (ctx.RegularDecimalReal() != null) {
+            return new LiteralExpr(
+                    Double.TYPE,
+                    Double.parseDouble(ctx.RegularDecimalReal().getSymbol().getText()));
+        }
+        if (ctx.ExponentDecimalReal() != null) {
+            return new LiteralExpr(
+                    Double.TYPE,
+                    Double.parseDouble(ctx.ExponentDecimalReal().getSymbol().getText()));
+        }
+        return null;
+    }
+
+    @Override
     public Object visitOC_BooleanLiteral(CypherParser.OC_BooleanLiteralContext ctx) {
         if (ctx.TRUE() != null) {
             return new LiteralExpr(Boolean.TYPE, true);

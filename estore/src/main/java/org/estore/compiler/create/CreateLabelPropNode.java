@@ -93,6 +93,8 @@ public class CreateLabelPropNode {
         res += "Field f = klass.getDeclaredField(property.getName());";
         res += "if (property.getType() == long.class) {";
         res += "f.setLong(obj, ((Long) property.getValue()));";
+        res += "} else if (property.getType() == double.class) {";
+        res += "f.setDouble(obj, ((Double) property.getValue()));";
         res += "} else if (property.getType() == String.class) {";
         res += "f.set(obj, property.getValue());";
         res += "}";

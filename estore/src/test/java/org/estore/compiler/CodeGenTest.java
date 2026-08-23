@@ -209,6 +209,18 @@ public class CodeGenTest {
     }
 
     @Test
+    void createObjectWithManyTypes() throws EstoreException {
+        estore.query("CREATE (n:`ValManyTypes2` {i: 30, d: 30.0, s: 'something'}) RETURN n");
+        Table result = estore.query("MATCH (n:`ValManyTypes2`) RETURN n");
+
+        assertEquals(1, result.getSize());
+        Object obj = result.get("n").get(0);
+        assertEquals(30, estore.getLong(obj, "i"));
+        assertEquals(30.0, estore.getDouble(obj, "d"), 0.01);
+        assertEquals("something", estore.getString(obj, "s"));
+    }
+
+    @Test
     void testCreateTwoNodeRelation() throws EstoreException {
         Table result =
                 estore.query("CREATE (n:`org.estore.F2`)-[:e]->(m:`org.estore.G2`) RETURN m,n");
