@@ -15,7 +15,7 @@ public class PatriciaTrieTest {
     private int size;
 
     @BeforeEach
-    public void initDatabase() throws Exception {
+    public void initDatabase() {
         estore = new Estore(PatriciaTrieTest.class.getName());
         size = 5;
     }

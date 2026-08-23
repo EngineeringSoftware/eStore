@@ -11,7 +11,7 @@ public class SimpleQueryTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         db = new Estore(SimpleQueryTest.class.getName());
     }
 
@@ -24,5 +24,9 @@ public class SimpleQueryTest {
         Table count = db.query("MATCH (n:`SimpleNode`) RETURN COUNT(n)");
         assertEquals(1, count.getSize());
         assertEquals(1, count.get("COUNT(n)").get(0));
+
+        Table star = db.query("MATCH (n:`SimpleNode`) RETURN COUNT(*)");
+        assertEquals(1, star.getSize());
+        assertEquals(1, star.get("COUNT(*)").get(0));
     }
 }

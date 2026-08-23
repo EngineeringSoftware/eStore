@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import java.util.concurrent.ThreadLocalRandom;
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,12 +20,12 @@ public class FastutilTest {
     private Long2IntAVLTreeMap map;
 
     @BeforeEach
-    public void initDatabase() throws Exception {
+    public void initDatabase() {
         estore = new Estore(FastutilTest.class.getName());
     }
 
     @Test
-    public void testArrayListContains() throws Exception {
+    public void testArrayListContains() throws EstoreException {
         rand = ThreadLocalRandom.current();
         list = new LongArrayList();
         for (int j = 0; j < 100; j++) {
@@ -39,7 +40,7 @@ public class FastutilTest {
     }
 
     @Test
-    public void testHashSetContains() throws Exception {
+    public void testHashSetContains() throws EstoreException {
         set = new LongOpenHashSet();
         for (int j = 0; j < 100; j++) {
             set.add(j);
@@ -53,7 +54,7 @@ public class FastutilTest {
     }
 
     @Test
-    public void testAVLTreeMapKeys() throws Exception {
+    public void testAVLTreeMapKeys() throws EstoreException {
         map = new Long2IntAVLTreeMap();
         for (int j = 1; j <= 100; j++) {
             map.put(j, j);

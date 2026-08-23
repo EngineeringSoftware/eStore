@@ -11,7 +11,7 @@ public class AggregateFunctionTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() throws EstoreException {
         db = new Estore(AggregateFunctionTest.class.getName());
         Person c = new Person("C", 30);
         Person b = new Person("B", 40, c);
@@ -20,25 +20,25 @@ public class AggregateFunctionTest {
     }
 
     @Test
-    void maxReturnsLargestAge() throws Exception {
+    void maxReturnsLargestAge() {
         Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN max(p.age)");
         assertEquals(40, result.get("MAX(p.age)").get(0));
     }
 
     @Test
-    void minReturnsSmallestAge() throws Exception {
+    void minReturnsSmallestAge() {
         Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN min(p.age)");
         assertEquals(20, result.get("MIN(p.age)").get(0));
     }
 
     @Test
-    void sumReturnsTotalAge() throws Exception {
+    void sumReturnsTotalAge() {
         Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN sum(p.age)");
         assertEquals(90, result.get("SUM(p.age)").get(0));
     }
 
     @Test
-    void avgReturnsMeanAge() throws Exception {
+    void avgReturnsMeanAge() {
         Table result = db.query("MATCH (p:`org.estore.example.Person`) RETURN avg(p.age)");
         assertEquals(30.0, result.get("AVG(p.age)").get(0));
     }

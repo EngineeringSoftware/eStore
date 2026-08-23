@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.estore.example.A;
 import org.estore.example.B;
 import org.estore.planner.util.ClassInfo;
@@ -22,7 +23,7 @@ public class UtilTest {
     private ClassInfo aInfo;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() throws EstoreException {
         estore = new Estore(UtilTest.class.getName());
         a = estore.insert(A.class);
         aInfo = estore.getLabelClassInfoMap().get(A.class.getName());
@@ -118,7 +119,7 @@ public class UtilTest {
     }
 
     @Test
-    void getsNeighborsFromAllOrNamedEdges() throws Exception {
+    void getsNeighborsFromAllOrNamedEdges() throws EstoreException {
         estore.insert(new NullReferenceNode());
 
         List<Object> allNeighbors = Util.getNeighbors(a, null, estore);

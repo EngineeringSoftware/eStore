@@ -189,7 +189,7 @@ class Neo4jImpermanantTest1
             }
   }
     @BeforeEach
-    public void setupData() throws Exception {
+    public void setupData() {
         String datasetPath = "/social_network-csv_composite-longdateformatter-sf1";
         HashMap<Long, Long> places = new HashMap<Long, Long>();
         HashMap<Long, Long> tagclasses = new HashMap<Long, Long>();

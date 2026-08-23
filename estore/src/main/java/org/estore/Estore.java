@@ -61,11 +61,11 @@ public class Estore implements Serializable {
         return labelClassInfoMap;
     }
 
-    public Estore(String name) throws Exception {
+    public Estore(String name) {
         this(name, EstoreOptions.getDefaultOptions());
     }
 
-    public Estore(String name, EstoreOptions options) throws Exception {
+    public Estore(String name, EstoreOptions options) {
         this.name = name;
         this.options = options;
         this.id = 0;

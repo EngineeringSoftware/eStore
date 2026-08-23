@@ -15,7 +15,7 @@ public class FastListTest {
     private int size;
 
     @BeforeEach
-    public void initDatabase() throws Exception {
+    public void initDatabase() {
         estore = new Estore(FastListTest.class.getName());
         size = 10;
     }

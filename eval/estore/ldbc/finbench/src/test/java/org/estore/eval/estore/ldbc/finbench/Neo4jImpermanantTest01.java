@@ -163,7 +163,7 @@ class Neo4jImpermanantTest01 {
   }
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() {
     String datasetPath = "/sf0.1";
     HashMap<Long, Long> accounts = new HashMap<Long, Long>();
     HashMap<Long, Long> companys = new HashMap<Long, Long>();

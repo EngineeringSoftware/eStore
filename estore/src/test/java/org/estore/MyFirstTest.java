@@ -12,7 +12,7 @@ public class MyFirstTest {
     private Estore db;
 
     @BeforeEach
-    void setup() throws Exception {
+    void setup() {
         db = new Estore(MyFirstTest.class.getName());
     }
 

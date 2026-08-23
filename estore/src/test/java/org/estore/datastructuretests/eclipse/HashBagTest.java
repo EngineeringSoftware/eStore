@@ -15,7 +15,7 @@ public class HashBagTest {
     private int size;
 
     @BeforeEach
-    public void initDatabase() throws Exception {
+    public void initDatabase() {
         estore = new Estore(HashBagTest.class.getName());
         size = 10;
     }

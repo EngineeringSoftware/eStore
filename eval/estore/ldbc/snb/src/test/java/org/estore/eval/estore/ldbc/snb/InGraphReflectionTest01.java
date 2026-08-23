@@ -17,13 +17,14 @@ import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTest01 {
 
   private Estore estore;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     estore = new Estore("myDb", new EstoreOptions().profile(true));
     readDataSet();
   }
@@ -129,7 +130,7 @@ public class InGraphReflectionTest01 {
     assertEquals(result.get("COUNT(r)").get(0), 1);
   }
 
-  public void readDataSet() throws Exception {
+  public void readDataSet() throws EstoreException {
     HashMap<Long, Person> persons = new HashMap<Long, Person>();
     HashMap<Long, Place> places = new HashMap<Long, Place>();
     HashMap<Long, Tag> tags = new HashMap<Long, Tag>();

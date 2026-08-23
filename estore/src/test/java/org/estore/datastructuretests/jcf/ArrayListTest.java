@@ -15,7 +15,7 @@ public class ArrayListTest {
     private int size;
 
     @BeforeEach
-    public void initDatabase() throws Exception {
+    public void initDatabase() {
         estore = new Estore(ArrayListTest.class.getName());
         size = 10;
     }

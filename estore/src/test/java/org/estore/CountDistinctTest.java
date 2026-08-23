@@ -11,12 +11,12 @@ public class CountDistinctTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         db = new Estore(CountDistinctTest.class.getName());
     }
 
     @Test
-    void countDistinctIsOneWhenCountIsTwo() throws Exception {
+    void countDistinctIsOneWhenCountIsTwo() throws EstoreException {
         // Keanu -> Carrie -> Guy
         // Keanu -> Liam -> Guy
         Person guy = new Person("Guy", 40);

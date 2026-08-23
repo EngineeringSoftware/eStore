@@ -1,13 +1,13 @@
 package org.estore.eval.estore.datastructure.eclipse;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.concurrent.ThreadLocalRandom;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.estore.planner.util.Table;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestFastList1000 {
   private Estore estore;
@@ -15,7 +15,7 @@ public class InGraphReflectionTestFastList1000 {
   private FastList<Long> fastList;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = ThreadLocalRandom.current();
     fastList = new FastList();
     for (int j = 0; j < 1000; j++) {

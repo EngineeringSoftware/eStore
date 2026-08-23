@@ -12,6 +12,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.estore.EstoreOptions;
 import org.estore.compiler.CompileQuery;
 import org.estore.eval.ldbc.finbench.util.*;
@@ -24,7 +25,7 @@ public class Fin001Test {
     private Estore estore;
 
     @BeforeEach
-    public void setupData() throws Exception {
+    public void setupData() throws EstoreException {
         estore = new Estore(Fin001Test.class.getName(), new EstoreOptions().profile(false));
 
         readDataSet();
@@ -140,7 +141,7 @@ public class Fin001Test {
         assertEquals(result.get("account.accountType").get(0), "certificate of deposit");
     }
 
-    public void readDataSet() throws Exception {
+    public void readDataSet() throws EstoreException {
         HashMap<Long, Person> persons = new HashMap<Long, Person>();
         HashMap<Long, Account> accounts = new HashMap<Long, Account>();
         HashMap<Long, Company> companys = new HashMap<Long, Company>();

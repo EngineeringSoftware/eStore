@@ -11,12 +11,12 @@ public class TypeFunctionTest {
     private Estore db;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         db = new Estore(TypeFunctionTest.class.getName());
     }
 
     @Test
-    void typeReturnsEdgeName() throws Exception {
+    void typeReturnsEdgeName() throws EstoreException {
         Person bob = new Person("Bob", 30);
         Person alice = new Person("Alice", 28, bob);
         db.captureAll(alice);

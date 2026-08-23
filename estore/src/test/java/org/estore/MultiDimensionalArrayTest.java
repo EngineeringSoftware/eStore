@@ -17,13 +17,13 @@ public class MultiDimensionalArrayTest {
     private ThreadLocalRandom rand;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         rand = ThreadLocalRandom.current();
         db = new Estore(MultiDimensionalArrayTest.class.getName());
     }
 
     @Test
-    public void testSimple3DMatrix() throws Exception {
+    public void testSimple3DMatrix() throws EstoreException {
         String[][][] m = new String[][][] {{{"a", "b"}, {"c", "d"}}, {{"e", "f"}, {"g", "h"}}};
         db.captureAll(m);
 
@@ -36,7 +36,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testLongMatrix2D_varLength() throws Exception {
+    public void testLongMatrix2DVarLength() throws EstoreException {
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 3;
@@ -59,7 +59,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testLongMatrix2D_indexed() throws Exception {
+    public void testLongMatrix2DIndexed() throws EstoreException {
         Long[][] grid = new Long[10][10];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int ti = 2;
@@ -84,7 +84,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testIntMatrix2D_varLength() throws Exception {
+    public void testIntMatrix2DVarLength() throws EstoreException {
         int[][] grid = new int[8][8];
         int target = 4242;
         int ti = 1;
@@ -107,7 +107,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testIntMatrix2D_indexed() throws Exception {
+    public void testIntMatrix2DIndexed() throws EstoreException {
         int[][] grid = new int[8][8];
         int target = 7777;
         int ti = 0;
@@ -132,7 +132,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testObjectMatrix3D_varLength() throws Exception {
+    public void testObjectMatrix3DVarLength() throws EstoreException {
         Object[][][] cube = new Object[4][4][4];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int a = 1;
@@ -161,7 +161,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testObjectMatrix3D_indexed() throws Exception {
+    public void testObjectMatrix3DIndexed() throws EstoreException {
         Object[][][] cube = new Object[3][3][3];
         long target = rand.nextLong(0, Long.MAX_VALUE);
         int a = 0;
@@ -193,7 +193,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testCaptureInsertsAllDims() throws Exception {
+    public void testCaptureInsertsAllDims() throws EstoreException {
         Long[][] grid = new Long[2][2];
         grid[0][0] = 1L;
         grid[0][1] = 2L;
@@ -210,7 +210,7 @@ public class MultiDimensionalArrayTest {
     }
 
     @Test
-    public void testDeleteArrayIndex() throws Exception {
+    public void testDeleteArrayIndex() throws EstoreException {
         Long[] arr = new Long[] {10L, 20L, 30L};
         db.captureAll(arr);
 
@@ -218,5 +218,82 @@ public class MultiDimensionalArrayTest {
         assertNull(Array.get(arr, 1));
         assertEquals(10L, ((Long) Array.get(arr, 0)).longValue());
         assertEquals(30L, ((Long) Array.get(arr, 2)).longValue());
+    }
+
+    @Test
+    public void testArrayTable() throws EstoreException {
+        Long[][] grid = new Long[10][10];
+        long target = rand.nextLong(0, Long.MAX_VALUE);
+        int ti = 4;
+        int tj = 6;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                grid[i][j] = (i == ti && j == tj) ? target : rand.nextLong(0, Long.MAX_VALUE);
+            }
+        }
+        db.captureAll(grid);
+
+        Table result =
+                db.query(
+                        "MATCH (n:`"
+                                + grid.getClass().getName()
+                                + "`)-[]->()-[]->(m {value:"
+                                + target
+                                + "}) RETURN m");
+        assertEquals(target, ((Long) result.get("m").get(0)).longValue());
+    }
+
+    @Test
+    public void testArrayTableDfs() throws EstoreException {
+        Estore dfsStore =
+                new Estore(
+                        MultiDimensionalArrayTest.class.getName() + "Dfs",
+                        new EstoreOptions().useDfs(true));
+        Long[][] grid = new Long[10][10];
+        long target = rand.nextLong(0, Long.MAX_VALUE);
+        int ti = 4;
+        int tj = 6;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                grid[i][j] = (i == ti && j == tj) ? target : rand.nextLong(0, Long.MAX_VALUE);
+            }
+        }
+        dfsStore.captureAll(grid);
+
+        Table result =
+                dfsStore.query(
+                        "MATCH (n:`"
+                                + grid.getClass().getName()
+                                + "`)-[]->()-[]->(m {value:"
+                                + target
+                                + "}) RETURN m");
+        assertEquals(target, ((Long) result.get("m").get(0)).longValue());
+    }
+
+    @Test
+    public void testIntMatrix2DDfs() throws EstoreException {
+        Estore dfsStore =
+                new Estore(
+                        MultiDimensionalArrayTest.class.getName() + "IntDfs",
+                        new EstoreOptions().useDfs(true));
+        int[][] grid = new int[8][8];
+        int target = 4242;
+        int ti = 1;
+        int tj = 4;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                grid[i][j] = (i == ti && j == tj) ? target : rand.nextInt(0, 10000);
+            }
+        }
+        dfsStore.captureAll(grid);
+
+        Table result =
+                dfsStore.query(
+                        "MATCH (n:`"
+                                + grid.getClass().getName()
+                                + "`)-[]->()-[]->(m {value:"
+                                + target
+                                + "}) RETURN m");
+        assertEquals(target, ((Integer) result.get("m").get(0)).intValue());
     }
 }

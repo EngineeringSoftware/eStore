@@ -6,6 +6,7 @@ import com.google.common.collect.ArrayTable;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,13 +16,13 @@ public class GuavaTest {
     private static ThreadLocalRandom rand;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         rand = ThreadLocalRandom.current();
         estore = new Estore(GuavaTest.class.getName());
     }
 
     @Test
-    public void testArrayTable() throws Exception {
+    public void testArrayTable() throws EstoreException {
         ArrayList<Long> rows = new ArrayList<Long>();
         ArrayList<Long> columns = new ArrayList<Long>();
         for (long j = 0; j < 10; j++) {

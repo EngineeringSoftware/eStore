@@ -15,7 +15,7 @@ public class LinkedListMultimapTest {
     private int size;
 
     @BeforeEach
-    public void initDatabase() throws Exception {
+    public void initDatabase() {
         estore = new Estore(LinkedListMultimapTest.class.getName());
         size = 10;
     }

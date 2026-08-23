@@ -8,10 +8,12 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.AfterEach;
@@ -23,7 +25,7 @@ public class H2MetadataTest {
     private Estore estore1;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() throws ClassNotFoundException, SQLException {
         String profileOpt = System.getProperty("profile");
         Boolean profileFlag = (profileOpt != null) && (profileOpt.equals("true"));
 
@@ -35,12 +37,12 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testConnection() throws Exception {
+    public void testConnection() {
         assertNotNull(h2Conn1, "Connection should not be null");
     }
 
     @Test
-    public void testSimpleQueryExecution() throws Exception {
+    public void testSimpleQueryExecution() throws SQLException {
         // test the connection works by executing a simple query
         try (Statement stmt = h2Conn1.createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT 1");
@@ -50,7 +52,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testCatalogsESTORE() throws Exception {
+    public void testCatalogsESTORE() throws ClassNotFoundException, EstoreException {
         // insert H2 Engine into estore
         Class t1 = Class.forName("org.h2.engine.Engine");
         estore1.captureAll(t1);
@@ -66,7 +68,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testCatalogsESTORERepeat() throws Exception {
+    public void testCatalogsESTORERepeat() throws ClassNotFoundException, EstoreException {
         // insert H2 Engine into estore
         Class t1 = Class.forName("org.h2.engine.Engine");
         estore1.captureAll(t1);
@@ -85,7 +87,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testCatalogsJDBC() throws Exception {
+    public void testCatalogsJDBC() throws SQLException {
         long t1 = System.nanoTime();
         DatabaseMetaData meta1 = h2Conn1.getMetaData();
         ResultSet res1 = meta1.getCatalogs();
@@ -102,7 +104,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testCatalogsJDBCRepeat() throws Exception {
+    public void testCatalogsJDBCRepeat() throws SQLException {
         ResultSet res1 = null;
         for (int i = 0; i < 5; i++) {
             long t1 = System.nanoTime();
@@ -122,7 +124,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testSchemasESTORE() throws Exception {
+    public void testSchemasESTORE() throws ClassNotFoundException, EstoreException {
         // insert H2 Engine into estore
         Class t1 = Class.forName("org.h2.engine.Engine");
         estore1.captureAll(t1);
@@ -149,7 +151,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testSchemasESTORERepeat() throws Exception {
+    public void testSchemasESTORERepeat() throws ClassNotFoundException, EstoreException {
         // insert H2 Engine into estore
         Class t1 = Class.forName("org.h2.engine.Engine");
         estore1.captureAll(t1);
@@ -177,7 +179,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testSchemasJDBC() throws Exception {
+    public void testSchemasJDBC() throws SQLException {
         long t1 = System.nanoTime();
         DatabaseMetaData meta1 = h2Conn1.getMetaData();
         ResultSet res1 = meta1.getSchemas();
@@ -195,7 +197,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testSchemasJDBCRepeat() throws Exception {
+    public void testSchemasJDBCRepeat() throws SQLException {
         ResultSet res1 = null;
         for (int i = 0; i < 5; i++) {
             long t1 = System.nanoTime();
@@ -216,7 +218,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testTablesESTORE() throws Exception {
+    public void testTablesESTORE() throws ClassNotFoundException, SQLException, EstoreException {
         // Create new tables
         Statement stmt = h2Conn1.createStatement();
         stmt.execute(
@@ -249,7 +251,8 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testTablesESTORERepeat() throws Exception {
+    public void testTablesESTORERepeat()
+            throws ClassNotFoundException, SQLException, EstoreException {
         // Create new tables
         Statement stmt = h2Conn1.createStatement();
         stmt.execute(
@@ -280,7 +283,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testTablesJDBC() throws Exception {
+    public void testTablesJDBC() throws SQLException {
         // Create new tables
         Statement stmt = h2Conn1.createStatement();
         stmt.execute(
@@ -304,7 +307,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testTablesJDBCRepeat() throws Exception {
+    public void testTablesJDBCRepeat() throws SQLException {
         // Create new tables
         Statement stmt = h2Conn1.createStatement();
         stmt.execute(
@@ -331,7 +334,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testDbNameESTORE() throws Exception {
+    public void testDbNameESTORE() throws ClassNotFoundException, EstoreException {
         // insert H2 Engine into estore
         Class t1 = Class.forName("org.h2.engine.Engine");
         estore1.captureAll(t1);
@@ -347,7 +350,7 @@ public class H2MetadataTest {
     }
 
     @Test
-    public void testUsersESTORE() throws Exception {
+    public void testUsersESTORE() throws ClassNotFoundException, SQLException, EstoreException {
         // create new user
         Statement stmt = h2Conn1.createStatement();
         stmt.execute("CREATE USER IF NOT EXISTS USER1 PASSWORD 'password1'");
@@ -373,7 +376,7 @@ public class H2MetadataTest {
     }
 
     @AfterEach
-    public void drop() throws Exception {
+    public void drop() throws SQLException {
         if (h2Conn1 != null) {
             h2Conn1.close();
         }

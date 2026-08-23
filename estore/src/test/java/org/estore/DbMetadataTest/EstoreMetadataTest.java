@@ -3,6 +3,7 @@ package org.estore.DbMetadataTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.estore.EstoreOptions;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,7 @@ public class EstoreMetadataTest {
     private Estore estore1, estore2, estore_d1, estore_d2, estore_d3, estore_b1, estore_b2;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         String profileOpt = System.getProperty("profile");
         Boolean profileFlag = (profileOpt != null) && (profileOpt.equals("true"));
 
@@ -27,14 +28,14 @@ public class EstoreMetadataTest {
     }
 
     @Test
-    public void testDbName() throws Exception {
+    public void testDbName() throws EstoreException {
         estore1.captureAll(estore2);
         Table res = estore1.query("MATCH (n: `org.estore.Estore`) RETURN n.name");
         assertEquals(EstoreMetadataTest.class.getName() + "2", res.get("n.name").get(0));
     }
 
     @Test
-    public void testDbNameRepeat() throws Exception {
+    public void testDbNameRepeat() throws EstoreException {
         estore1.captureAll(estore2);
         Table res = null;
         for (int i = 0; i < 5; i++) {
@@ -44,7 +45,7 @@ public class EstoreMetadataTest {
     }
 
     @Test
-    public void testOptions() throws Exception {
+    public void testOptions() throws EstoreException {
         estore_d1 =
                 new Estore(
                         EstoreMetadataTest.class.getName() + "Dfs1",
@@ -77,7 +78,7 @@ public class EstoreMetadataTest {
     }
 
     @Test
-    public void testOptionsRepeat() throws Exception {
+    public void testOptionsRepeat() throws EstoreException {
         estore_d1 =
                 new Estore(
                         EstoreMetadataTest.class.getName() + "Dfs1",
@@ -113,15 +114,9 @@ public class EstoreMetadataTest {
     }
 
     @Test
-    public void testDynamicClass() throws Exception {
+    public void testDynamicClass() throws EstoreException {
         estore2.query("CREATE (n: `Sample`)");
         estore1.captureAll(estore2);
-        // Table res =
-        //     estore1.query(
-        //         "MATCH (n:"
-        //             + "
-        // `org.estore.Estore`)-[:dynamicClasses]->(:`java.util.ArrayList`)-[:elementData]->(m"
-        //             + " {name: 'Sample'}) RETURN m");
         Table res =
                 estore1.query(
                         "MATCH (n:"
@@ -131,7 +126,7 @@ public class EstoreMetadataTest {
     }
 
     @Test
-    public void testDynamicClassRepeat() throws Exception {
+    public void testDynamicClassRepeat() throws EstoreException {
         estore2.query("CREATE (n: `Sample`)");
         estore1.captureAll(estore2);
         Table res = null;
@@ -140,8 +135,6 @@ public class EstoreMetadataTest {
                     estore1.query(
                             "MATCH (n:"
                                     + " `org.estore.Estore`)-[:dynamicClasses]->()-[:elementData]"
-                                    // dynamicClasses is an arraylist of <Class>,
-                                    // but Class doesn't have element data
                                     + "->(m {name: 'Sample'}) RETURN m");
         }
         assertEquals(1, res.getSize());

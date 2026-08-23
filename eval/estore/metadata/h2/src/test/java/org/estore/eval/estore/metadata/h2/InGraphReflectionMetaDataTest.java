@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.estore.Estore;
-import org.estore.EstoreOptions;
+import org.estore.EstoreException;
 import org.estore.planner.util.Table;
 
 import java.sql.Connection;
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import java.sql.SQLException;
 
 public class InGraphReflectionMetaDataTest {
 
@@ -21,13 +22,13 @@ public class InGraphReflectionMetaDataTest {
   private Estore estore1;
 
   @BeforeEach
-  public void setup() throws Exception {
+  public void setup() throws SQLException {
     estore1 = new Estore("estoreTestDb1");
     conn1 = DriverManager.getConnection("jdbc:h2:mem:h2TestDb1", "sa", "");
   }
 
   @Test
-  public void testH2DbNameQuery() throws Exception {
+  public void testH2DbNameQuery() throws ClassNotFoundException, EstoreException {
     // insert H2 Engine into estore
     Class t = Class.forName("org.h2.engine.Engine");
     estore1.captureAll(t);
@@ -47,7 +48,7 @@ public class InGraphReflectionMetaDataTest {
   }
 
   @Test
-  public void testH2TablesQuery() throws Exception {
+  public void testH2TablesQuery() throws ClassNotFoundException, SQLException, EstoreException {
     // Create new tables
     Statement stmt = conn1.createStatement();
     stmt.execute("CREATE TABLE IF NOT EXISTS TEST_TABLE1 (ID INT PRIMARY KEY, NAME VARCHAR(255))");
@@ -75,7 +76,7 @@ public class InGraphReflectionMetaDataTest {
   }
 
   @Test
-  public void testH2UsersQuery() throws Exception {
+  public void testH2UsersQuery() throws ClassNotFoundException, SQLException {
     // create new user
     Statement stmt = conn1.createStatement();
     stmt.execute("CREATE USER IF NOT EXISTS USER1 PASSWORD 'password1'");
@@ -104,7 +105,7 @@ public class InGraphReflectionMetaDataTest {
   }
 
   @AfterEach
-  public void drop() throws Exception {
+  public void drop() throws SQLException {
     if (conn1 != null) {
       conn1.close();
     }

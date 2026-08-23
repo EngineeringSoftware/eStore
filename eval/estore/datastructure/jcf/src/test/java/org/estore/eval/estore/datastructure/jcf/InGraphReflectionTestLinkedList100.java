@@ -1,13 +1,13 @@
 package org.estore.eval.estore.datastructure.jcf;
 
 import org.estore.Estore;
-import org.estore.EstoreOptions;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.LinkedList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.estore.planner.util.Table;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.estore.EstoreException;
 
 public class InGraphReflectionTestLinkedList100 {
   private Estore estore;
@@ -15,7 +15,7 @@ public class InGraphReflectionTestLinkedList100 {
   private LinkedList<Long> list;
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() throws EstoreException {
     rand = ThreadLocalRandom.current();
     list = new LinkedList<Long>();
     for (int j = 0; j < 100; j++) {

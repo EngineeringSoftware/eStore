@@ -15,7 +15,7 @@ public class HashSetTest {
     private int size;
 
     @BeforeEach
-    public void initDatabase() throws Exception {
+    public void initDatabase() {
         estore = new Estore(HashSetTest.class.getName());
         size = 10;
     }

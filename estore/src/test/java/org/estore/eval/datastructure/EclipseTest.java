@@ -11,6 +11,7 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.estore.Estore;
+import org.estore.EstoreException;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,13 +21,13 @@ public class EclipseTest {
     private static ThreadLocalRandom rand;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         estore = new Estore(EclipseTest.class.getName());
         rand = ThreadLocalRandom.current();
     }
 
     @Test
-    public void testUnifiedSet() throws Exception {
+    public void testUnifiedSet() throws EstoreException {
         ArrayList<Long> setData = new ArrayList<Long>();
         int ind = rand.nextInt(0, 99);
         for (int j = 0; j < 100; j++) {
@@ -52,7 +53,7 @@ public class EclipseTest {
     }
 
     @Test
-    public void testUnifiedMap() throws Exception {
+    public void testUnifiedMap() throws EstoreException {
         ArrayList<Long> setData = new ArrayList<Long>();
         UnifiedMap<Long, Long> unifiedMap = new UnifiedMap();
         int ind = rand.nextInt(0, 99);
@@ -80,7 +81,7 @@ public class EclipseTest {
     }
 
     @Test
-    public void testFastList() throws Exception {
+    public void testFastList() throws EstoreException {
         FastList<Long> fastList = new FastList();
         int ind = rand.nextInt(0, 99);
         for (int j = 0; j < 100; j++) {
@@ -105,7 +106,7 @@ public class EclipseTest {
     }
 
     @Test
-    public void testArrayStack() throws Exception {
+    public void testArrayStack() throws EstoreException {
         ArrayStack<Long> arrayStack = new ArrayStack();
         ArrayList<Long> stackData = new ArrayList<Long>();
         int ind = rand.nextInt(0, 99);
@@ -130,7 +131,7 @@ public class EclipseTest {
     }
 
     @Test
-    public void testImmutableArrayList() throws Exception {
+    public void testImmutableArrayList() throws EstoreException {
         ArrayList<Long> listData = new ArrayList<Long>();
         int ind = rand.nextInt(0, 99);
         for (int j = 0; j < 100; j++) {

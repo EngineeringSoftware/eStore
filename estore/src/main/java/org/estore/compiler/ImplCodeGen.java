@@ -9,6 +9,7 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.antlr.v4.runtime.CharStreams;
@@ -133,7 +134,7 @@ public class ImplCodeGen {
         return Paths.get(parentDir, "Transformed" + fileName).toString();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         String inputFilePath = args.length > 0 ? args[0] : DEFAULT_INPUT_FILE_PATH;
         String outputFilePath = args.length > 1 ? args[1] : getDefaultOutputFilePath(inputFilePath);
         CompilationUnit cu = StaticJavaParser.parse(Files.newInputStream(Paths.get(inputFilePath)));

@@ -27,13 +27,7 @@ public class CreateInstanceTest {
 
     @BeforeEach
     public void initDatabase() {
-        try {
-            estore =
-                    new Estore(
-                            CreateInstanceTest.class.getName(), new EstoreOptions().useDfs(false));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        estore = new Estore(CreateInstanceTest.class.getName(), new EstoreOptions().useDfs(false));
     }
 
     /*
@@ -47,7 +41,7 @@ public class CreateInstanceTest {
      * }
      *
      * @RepeatedTest(50)
-     * void testNodeAddPropertyESTOREEval() throws Exception {
+     * void testNodeAddPropertyESTOREEval() {
      * long t1 = System.currentTimeMillis();
      * estore.add(A.class);
      */
@@ -67,7 +61,7 @@ public class CreateInstanceTest {
     * }
     *
     * @Test
-    * void createDropNodeLongStringPropertyESTOREEval() throws Exception {
+    * void createDropNodeLongStringPropertyESTOREEval() {
     * String testPropertyKey = "testProperty";
     * String propertyValue = RandomStringUtils.randomAlphanumeric(255);
     *
@@ -82,7 +76,7 @@ public class CreateInstanceTest {
     * }
     *
     * @Test
-    * void createObjectWithJ() throws Exception {
+    * void createObjectWithJ() {
     * estore.add("create (n: `Val` {value: 30}) return n");
     * Object[] objs = estore.query(true, "match (n: `Val`) return n");
     *
@@ -95,7 +89,7 @@ public class CreateInstanceTest {
     * }
     *
     * @Test
-    * void createObjectWithD() throws Exception {
+    * void createObjectWithD() {
     * estore.add("create (n: `Val` {value: 30.0}) return n");
     * Object[] objs = estore.query(true, "match (n: `Val`) return n");
     *
@@ -108,7 +102,7 @@ public class CreateInstanceTest {
     * }
     *
     * @Test
-    * void createObjectWithString() throws Exception {
+    * void createObjectWithString() {
     * estore.add("create (n: `Val` {value: 'something'}) return n");
     * Object[] objs = estore.query(true, "match (n: `Val`) return n");
     *
@@ -122,7 +116,7 @@ public class CreateInstanceTest {
     * }
     *
     * @Test
-    * void createObjectWithManyTypes() throws Exception {
+    * void createObjectWithManyTypes() {
     * estore.add("create (n: `Val` {i: 30, d: 30.0, s: 'something'}) return n");
     * Object[] objs = estore.query(true, "match (n: `Val`) return n");
     *
@@ -422,7 +416,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testNodeAddPropertyCypher2() throws Exception {
+    void testNodeAddPropertyCypher2() throws ReflectiveOperationException {
         Table result = estore.query("CREATE (n:`DummyClass3` {name:'Uki', age:30}) RETURN n");
         Object obj = result.get("n").get(0);
         Class objClass = obj.getClass();
@@ -433,7 +427,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testArrayList() throws Exception {
+    void testArrayList() throws EstoreException {
         ArrayList<Long> a = new ArrayList<Long>();
         a.add(10L);
         a.add(20L);
@@ -447,7 +441,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testLinkedList() throws Exception {
+    void testLinkedList() throws EstoreException {
         LinkedList<Long> a = new LinkedList<Long>();
         ThreadLocalRandom rand = ThreadLocalRandom.current();
         for (long j = 0; j < 10000; j++) {
@@ -465,7 +459,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testLinkedList2() throws Exception {
+    void testLinkedList2() throws EstoreException {
         LinkedList<Long> a = new LinkedList<Long>();
         ThreadLocalRandom rand = ThreadLocalRandom.current();
         for (int j = 0; j < 100000; j++) {
@@ -485,7 +479,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testLinkedList3() throws Exception {
+    void testLinkedList3() throws EstoreException {
         LinkedList<Long> a = new LinkedList<Long>();
         ThreadLocalRandom rand = ThreadLocalRandom.current();
         for (int j = 0; j < 50; j++) {
@@ -504,7 +498,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testArrayDeque() throws Exception {
+    void testArrayDeque() throws EstoreException {
         ArrayDeque<Long> a = new ArrayDeque<Long>();
         a.add(10L);
         a.add(20L);
@@ -537,7 +531,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testVector() throws Exception {
+    void testVector() throws EstoreException {
         Vector<Long> a = new Vector<Long>();
         a.add(10L);
         a.add(20L);
@@ -550,7 +544,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testHashMap() throws Exception {
+    void testHashMap() throws EstoreException {
         HashMap<Long, Long> a = new HashMap<Long, Long>();
         a.put(10L, 10L);
         a.put(20L, 20L);
@@ -563,7 +557,7 @@ public class CreateInstanceTest {
     }
 
     @Test
-    void testConcurrentHashMap() throws Exception {
+    void testConcurrentHashMap() throws EstoreException {
         ConcurrentHashMap<String, Long> a = new ConcurrentHashMap<String, Long>();
         a.put("TABLE1", 10L);
         a.put("TABLE2", 20L);

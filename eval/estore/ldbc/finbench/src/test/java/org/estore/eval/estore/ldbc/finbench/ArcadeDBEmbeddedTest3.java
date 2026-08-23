@@ -206,7 +206,7 @@ class ArcadeDBEmbeddedTest3 {
   }
 
   @BeforeEach
-  public void setupData() throws Exception {
+  public void setupData() {
     try {
       dbFactory = new DatabaseFactory("ArcadeDB/database");
       db = dbFactory.create();
