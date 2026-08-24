@@ -14,6 +14,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.estore.Estore;
 import org.estore.EstoreOptions;
 import org.estore.compiler.CompileQuery;
+import org.estore.eval.EvalUtil;
 import org.estore.eval.ldbc.snb.util.*;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,15 +30,6 @@ public class Snb01Test {
         readDataSet();
     }
 
-    private void printQueryTime(String queryName, long startNanos) {
-        String profileOpt = System.getProperty("profile");
-        if (profileOpt != null && profileOpt.equals("true")) {
-            System.out.println(queryName);
-            System.out.println(
-                    "Time: " + ((float) (System.nanoTime() - startNanos)) / 1_000_000.0 + "ms");
-        }
-    }
-
     @CompileQuery
     @Test
     public void testInteractiveDeleteQuery2() {
@@ -47,7 +39,7 @@ public class Snb01Test {
                         "MATCH (m:`org.estore.eval.ldbc.snb.util.Person`"
                                 + "{id:10995116278291})-[likes:LIKES2]->(:`org.estore.eval.ldbc.snb.util.Post`"
                                 + "{id:343597383821}) DELETE likes RETURN COUNT(m)");
-        printQueryTime("InteractiveDeleteQuery2", t1);
+        EvalUtil.printQueryTime("InteractiveDeleteQuery2", t1);
         assertEquals(result.get("COUNT(m)").get(0), 1);
     }
 
@@ -60,7 +52,7 @@ public class Snb01Test {
                         "MATCH (m:`org.estore.eval.ldbc.snb.util.Person`"
                                 + " {id:19791209300608})-[likes:LIKES1]->(:`org.estore.eval.ldbc.snb.util.Comment`"
                                 + " {id:549755814421}) DELETE likes RETURN COUNT(m)");
-        printQueryTime("InteractiveDeleteQuery3", t1);
+        EvalUtil.printQueryTime("InteractiveDeleteQuery3", t1);
         assertEquals(result.get("COUNT(m)").get(0), 1);
     }
 
@@ -73,7 +65,7 @@ public class Snb01Test {
                         "MATCH (m:`org.estore.eval.ldbc.snb.util.Forum`"
                                 + " {id:481036337162})-[hasMember:HAS_MEMBER]->(:`org.estore.eval.ldbc.snb.util.Person`"
                                 + " {id:2199023256077}) DELETE hasMember RETURN COUNT(m)");
-        printQueryTime("InteractiveDeleteQuery5", t1);
+        EvalUtil.printQueryTime("InteractiveDeleteQuery5", t1);
         assertEquals(result.get("COUNT(m)").get(0), 1);
     }
 
@@ -88,7 +80,7 @@ public class Snb01Test {
                                 + " RETURN n.firstName AS firstName, n.lastName AS lastName, n.birthday AS"
                                 + " birthday, n.locationIP AS locationIP, n.browserUsed AS browserUsed, p.id AS"
                                 + " cityId, n.gender AS gender, n.creationDate AS creationDate");
-        printQueryTime("InteractiveShortQuery1", t1);
+        EvalUtil.printQueryTime("InteractiveShortQuery1", t1);
         assertEquals(result.get("birthday").get(0), 579484800000L);
         assertEquals(result.get("firstName").get(0), "Min-Jung");
         assertEquals(result.get("lastName").get(0), "Park");
@@ -108,7 +100,7 @@ public class Snb01Test {
                         "MATCH (m:`org.estore.eval.ldbc.snb.util.Comment`"
                                 + " {id:206158430603})-[:HAS_CREATOR]->(p:`org.estore.eval.ldbc.snb.util.Person`)"
                                 + " RETURN p.id AS personId, p.firstName AS firstName, p.lastName AS lastName");
-        printQueryTime("InteractiveShortQuery5", t1);
+        EvalUtil.printQueryTime("InteractiveShortQuery5", t1);
         assertEquals(result.get("firstName").get(0), "Rudolf");
         assertEquals(result.get("lastName").get(0), "Engel");
         assertEquals(result.get("personId").get(0), 2199023256437L);
@@ -123,7 +115,7 @@ public class Snb01Test {
                         "MATCH (person:`org.estore.eval.ldbc.snb.util.Person` {id:10995116278291}),"
                                 + " (post:`org.estore.eval.ldbc.snb.util.Post` {id:481036337280})  CREATE"
                                 + " (person)-[r:LIKES2]->(post) RETURN COUNT(r)");
-        printQueryTime("InteractiveUpdateQuery2", t1);
+        EvalUtil.printQueryTime("InteractiveUpdateQuery2", t1);
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
@@ -136,7 +128,7 @@ public class Snb01Test {
                         "MATCH (person:`org.estore.eval.ldbc.snb.util.Person` {id:19791209301454}),"
                                 + " (comment:`org.estore.eval.ldbc.snb.util.Comment` {id:481036337631})  CREATE"
                                 + " (person)-[r:LIKES1]->(comment) RETURN COUNT(r)");
-        printQueryTime("InteractiveUpdateQuery3", t1);
+        EvalUtil.printQueryTime("InteractiveUpdateQuery3", t1);
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
@@ -149,7 +141,7 @@ public class Snb01Test {
                         "MATCH (f:`org.estore.eval.ldbc.snb.util.Forum` {id:549755813984}),"
                                 + " (p:`org.estore.eval.ldbc.snb.util.Person` {id:19791209300852})  CREATE"
                                 + " (f)-[r:HAS_MEMBER]->(p) RETURN COUNT(r)");
-        printQueryTime("InteractiveUpdateQuery5", t1);
+        EvalUtil.printQueryTime("InteractiveUpdateQuery5", t1);
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
@@ -162,7 +154,7 @@ public class Snb01Test {
                         "MATCH (p1:`org.estore.eval.ldbc.snb.util.Person` {id:4398046512167}),"
                                 + " (p2:`org.estore.eval.ldbc.snb.util.Person` {id:2199023256816})  CREATE"
                                 + " (p1)-[r:KNOWS]->(p2) RETURN COUNT(r)");
-        printQueryTime("InteractiveUpdateQuery8", t1);
+        EvalUtil.printQueryTime("InteractiveUpdateQuery8", t1);
         assertEquals(result.get("COUNT(r)").get(0), 1);
     }
 
