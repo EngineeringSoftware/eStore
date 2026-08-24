@@ -100,6 +100,8 @@ public class CreateLabelPropNode extends LogicalPlan {
                         Field f = klass.getDeclaredField(property.getName());
                         if (property.getType() == long.class) {
                             f.setLong(obj, ((Long) property.getValue()));
+                        } else if (property.getType() == double.class) {
+                            f.setDouble(obj, ((Double) property.getValue()));
                         } else if (property.getType() == String.class) {
                             f.set(obj, property.getValue());
                         }
