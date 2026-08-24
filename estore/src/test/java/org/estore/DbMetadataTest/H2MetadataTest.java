@@ -23,11 +23,12 @@ import org.junit.jupiter.api.Test;
 public class H2MetadataTest {
     private Connection h2Conn1;
     private Estore estore1;
+    private boolean profileFlag;
 
     @BeforeEach
     public void setup() throws ClassNotFoundException, SQLException {
         String profileOpt = System.getProperty("profile");
-        Boolean profileFlag = (profileOpt != null) && (profileOpt.equals("true"));
+        profileFlag = (profileOpt != null) && (profileOpt.equals("true"));
 
         estore1 =
                 new Estore(
@@ -110,7 +111,9 @@ public class H2MetadataTest {
             long t1 = System.nanoTime();
             DatabaseMetaData meta1 = h2Conn1.getMetaData();
             res1 = meta1.getCatalogs();
-            // System.out.println("Total Query Time : " + (System.nanoTime() - t1));
+            if (profileFlag) {
+                System.out.println("Total Query Time : " + (System.nanoTime() - t1));
+            }
         }
 
         Set<String> catalogs = new HashSet<>();
@@ -203,7 +206,9 @@ public class H2MetadataTest {
             long t1 = System.nanoTime();
             DatabaseMetaData meta1 = h2Conn1.getMetaData();
             res1 = meta1.getSchemas();
-            // System.out.println("Total Query Time : " + (System.nanoTime() - t1));
+            if (profileFlag) {
+                System.out.println("Total Query Time : " + (System.nanoTime() - t1));
+            }
         }
 
         Set<String> schemas = new HashSet<>();
@@ -320,7 +325,9 @@ public class H2MetadataTest {
             long t1 = System.nanoTime();
             DatabaseMetaData meta1 = h2Conn1.getMetaData();
             res1 = meta1.getTables(null, "PUBLIC", "%", new String[] {"TABLE"});
-            // System.out.println("Total Query Time : " + (System.nanoTime() - t1));
+            if (profileFlag) {
+                System.out.println("Total Query Time : " + (System.nanoTime() - t1));
+            }
         }
 
         Set<String> tables = new HashSet<>();

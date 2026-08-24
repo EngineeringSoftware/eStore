@@ -1,9 +1,15 @@
 from collections import defaultdict
 import json
+import os
 import re
 import subprocess
 import sys
 import statistics
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ESTORE_DIR = os.path.join(REPO_ROOT, "estore")
+PLUGIN_COORD = "org.estore:estore-maven-plugin:1.0-SNAPSHOT:codegen"
+MVN_TEST_FLAGS = "-Dprofile=true -Dsurefire.redirectTestOutputToFile=false"
 
 NUMBER_OF_RUNS = 5
 
@@ -51,16 +57,28 @@ def extract_overhead_times(output):
     results["total"] = total_time
     return results
 
-def run_command(command):
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    output = result.stdout.strip()
+def run_command(command, cwd=ESTORE_DIR):
+    result = subprocess.run(command, shell=True, capture_output=True, text=True, cwd=cwd)
+    output = (result.stdout + "\n" + result.stderr).strip()
+    if result.returncode != 0:
+        print(output)
+        sys.exit(result.returncode)
     return output
 
+def install_codegen_plugin():
+    run_command("mvn -pl estore-maven-plugin -am install -DskipTests", cwd=REPO_ROOT)
+
+def run_codegen():
+    return run_command("mvn " + PLUGIN_COORD)
+
 def generate_json_sequence():
+    install_codegen_plugin()
+    run_codegen()
+
     def run_test(test_name):
         times = []
         for _ in range(NUMBER_OF_RUNS):
-            output = run_command(f"mvn test -Dtest={test_name}")
+            output = run_command(f"mvn test -Dtest={test_name} {MVN_TEST_FLAGS}")
             _, run_times = extract_times_sorted(output)
             times.append([float(time) for time in run_times])
         return times
@@ -81,6 +99,9 @@ def generate_json_sequence():
         json.dump(result, f, indent=2)
     
 def generate_json_standalone():
+    install_codegen_plugin()
+    run_codegen()
+
     results = {
         "original": defaultdict(lambda: defaultdict(lambda: defaultdict(float))),
         "transformed": defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
@@ -91,13 +112,14 @@ def generate_json_standalone():
             for bench, queries in QUERIES.items():
                 for query in queries:
                     test_class = f"{'Transformed' if version == 'transformed' else ''}{bench}Test"
-                    command = f"mvn test -Dtest={test_class}#test{query}"
+                    command = f"mvn test -Dtest={test_class}#test{query} {MVN_TEST_FLAGS}"
                     output = run_command(command)
                     time = extract_time(output)
                     if time is not None:
                         results[version][bench][query][str(run)] = time
                     else:
                         print(f"Error: {version} {bench} {query} failed")
+                        print(output)
                         sys.exit(1)
                     print(f"Run {run + 1}/{NUMBER_OF_RUNS}: {version} {bench} {query} completed")
 
@@ -119,14 +141,18 @@ def generate_json_standalone():
     print("Results have been saved to codegen-standalone.json")
 
 def generate_json_overhead():
+    install_codegen_plugin()
     results = {}
     averages = {}
     for run in range(NUMBER_OF_RUNS):
-        command = "mvn org.estore:estore-maven-plugin:codegen"
-        output = run_command(command)
+        output = run_codegen()
         data = extract_overhead_times(output)
         for bench, quries in QUERIES.items():
             for query in quries:
+                if query not in data:
+                    print(f"Error: missing codegen time for {query}")
+                    print(output)
+                    sys.exit(1)
                 if bench not in results:
                     results[bench] = {}
                     averages[bench] = {}
@@ -135,6 +161,10 @@ def generate_json_overhead():
                     averages[bench][query] = []
                 results[bench][query][str(run)] = data[query]
                 averages[bench][query].append(data[query])
+        if data["total"] is None:
+            print("Error: missing Total Time taken")
+            print(output)
+            sys.exit(1)
         if "total" not in results:
             results["total"] = {}
             averages["total"] = []
@@ -157,7 +187,7 @@ def generate_json_overhead():
     
 if __name__ == '__main__':
     if len(sys.argv) != 2 or sys.argv[1] not in ['standalone', 'sequence', 'overhead']:
-        print("Usage: python gen_codegen_data.py [standalone|sequence|overhead]")
+        print("Usage: python scripts/gen_codegen_data.py [standalone|sequence|overhead]")
         sys.exit(1)
     
     if sys.argv[1] == 'sequence':

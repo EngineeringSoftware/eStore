@@ -15,6 +15,7 @@ import org.estore.Estore;
 import org.estore.EstoreException;
 import org.estore.EstoreOptions;
 import org.estore.compiler.CompileQuery;
+import org.estore.eval.EvalUtil;
 import org.estore.eval.ldbc.finbench.util.*;
 import org.estore.planner.util.Table;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,6 @@ public class Fin001Test {
     @CompileQuery
     @Test
     public void testTw1() {
-        // System.out.println("Tw1");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
@@ -42,13 +42,12 @@ public class Fin001Test {
                                 + " 'George'})-[:Own]->(:`org.estore.eval.ldbc.finbench.util.Account`"
                                 + " {accountId: 1020342322, createTime: '26th March', isBlocked: False,"
                                 + " accountType: 'brokerage account'})");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        EvalUtil.printQueryTime("Tw1", t1);
     }
 
     @CompileQuery
     @Test
     public void testTw2() {
-        // System.out.println("Tw2");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
@@ -56,26 +55,24 @@ public class Fin001Test {
                                 + " companyName: 'Rand'})-[:Own]->(:`org.estore.eval.ldbc.finbench.util.Account`"
                                 + " {accountId: 1213243435, createTime: 'February 5th', isBlocked: False,"
                                 + " accountType: 'brokerage account'})");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        EvalUtil.printQueryTime("Tw2", t1);
     }
 
     @CompileQuery
     @Test
     public void testTw3() {
-        // System.out.println("Tw3");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         " MATCH (dst:`org.estore.eval.ldbc.finbench.util.Account` {accountId:"
                                 + " 4619004367821865972}), (src:`org.estore.eval.ldbc.finbench.util.Account`"
                                 + " {accountId: 99079191802151398}) CREATE (dst)-[:Transfer]->(src)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        EvalUtil.printQueryTime("Tw3", t1);
     }
 
     @CompileQuery
     @Test
     public void testTw4() {
-        // System.out.println("Tw4");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
@@ -83,59 +80,55 @@ public class Fin001Test {
                                 + " 4619004367821865972, accountType:'card'}),"
                                 + " (src:`org.estore.eval.ldbc.finbench.util.Account` {accountId:"
                                 + " 99079191802151398}) CREATE (dst)-[:Withdraw]->(src)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        EvalUtil.printQueryTime("Tw4", t1);
     }
 
     @CompileQuery
     @Test
     public void testTw8() {
-        // System.out.println("Tw8");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (acc:`org.estore.eval.ldbc.finbench.util.Account` {accountId:"
                                 + " 4700350636091245930}), (loan:`org.estore.eval.ldbc.finbench.util.Loan`"
                                 + " {loanId: 4684025087442027461}) CREATE (loan)-[:Deposit]->(acc)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        EvalUtil.printQueryTime("Tw8", t1);
     }
 
     @CompileQuery
     @Test
     public void testTw9() {
-        // System.out.println("Tw9");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (acc:`org.estore.eval.ldbc.finbench.util.Account` {accountId:"
                                 + " 4700350636091245930}), (loan:`org.estore.eval.ldbc.finbench.util.Loan`"
                                 + " {loanId: 4684025087442027461}) CREATE (acc)-[:Repay]->(loan)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        EvalUtil.printQueryTime("Tw9", t1);
     }
 
     @CompileQuery
     @Test
     public void testTw13() {
-        // System.out.println("Tw13");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (p1:`org.estore.eval.ldbc.finbench.util.Person` {personId: 2199023255767}),"
                                 + " (p2:`org.estore.eval.ldbc.finbench.util.Person` {personId: 10995116278183})"
                                 + " CREATE (p1)<-[:Guarantee]-(p2)");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        EvalUtil.printQueryTime("Tw13", t1);
     }
 
     @CompileQuery
     @Test
     public void testTsr1() {
-        // System.out.println("Tsr1");
         long t1 = System.nanoTime();
         Table result =
                 estore.query(
                         "MATCH (account:`org.estore.eval.ldbc.finbench.util.Account` {accountId:"
                                 + " 4700350636091245930}) RETURN account.createTime, account.isBlocked,"
                                 + " account.accountType");
-        // System.out.println("Time: " + ((float) (System.nanoTime() - t1)) / 1_000_000.0 + "ms");
+        EvalUtil.printQueryTime("Tsr1", t1);
         assertEquals(result.get("account.createTime").get(0), "2020-11-11 18:44:24.021");
         assertEquals(result.get("account.isBlocked").get(0), false);
         assertEquals(result.get("account.accountType").get(0), "certificate of deposit");
