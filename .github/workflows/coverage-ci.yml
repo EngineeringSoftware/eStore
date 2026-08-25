@@ -1,11 +1,11 @@
-name: Formatting CI
+name: Coverage CI
 
 on:
   push:
   pull_request:
 
 jobs:
-  formatting:
+  coverage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,5 +16,8 @@ jobs:
           java-version: "25"
           cache: maven
 
-      - name: Check formatting
-        run: mvn spotless:check
+      - name: Install test-data tools
+        run: sudo apt-get update && sudo apt-get install -y wget zstd
+
+      - name: Check coverage
+        run: mvn -pl estore clean test jacoco:report jacoco:check
