@@ -1,4 +1,9 @@
 # In-memory Object Graph Stores
+
+[![Test CI](https://github.com/EngineeringSoftware/eStore/actions/workflows/test-ci.yml/badge.svg)](https://github.com/EngineeringSoftware/eStore/actions/workflows/test-ci.yml)
+[![Formatting CI](https://github.com/EngineeringSoftware/eStore/actions/workflows/formatting-ci.yml/badge.svg)](https://github.com/EngineeringSoftware/eStore/actions/workflows/formatting-ci.yml)
+[![Coverage CI](https://github.com/EngineeringSoftware/eStore/actions/workflows/coverage-ci.yml/badge.svg)](https://github.com/EngineeringSoftware/eStore/actions/workflows/coverage-ci.yml)
+
 <img src="images/estore_logo.png" width="400" />
 
 Implementation of an in-memory object graph store, dubbed ϵStore. Our

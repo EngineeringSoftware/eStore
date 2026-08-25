@@ -1,11 +1,11 @@
-name: Test CI
+name: Coverage CI
 
 on:
   push:
   pull_request:
 
 jobs:
-  test:
+  coverage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,13 +24,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
-      - name: Build and test estore
-        run: mvn -pl estore clean test jacoco:report -Dmaven.compiler.release=8
-
-      - name: Upload JaCoCo report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: estore/target/site/jacoco/
-          if-no-files-found: ignore
+      - name: Check coverage
+        run: mvn -pl estore clean test jacoco:report jacoco:check -Dmaven.compiler.release=8
