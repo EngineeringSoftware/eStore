@@ -19,8 +19,10 @@ function check_deps() {
         ! hash "mvn" && \
                 { echo "missing maven (https://maven.apache.org/download.cgi)"; return 1; }
 
-        java -version 2>&1 | grep -qE 'version "1\.8|version "8' || \
-                { echo "no java 8 available (apt-get install openjdk-8-jdk; macOS: brew install openjdk@8)"; return 1; }
+        if ! hash "java" 2>/dev/null || ! hash "javac" 2>/dev/null; then
+                echo "no JDK available (CI uses Oracle JDK 25; bytecode target is Java 8)"
+                return 1
+        fi
 
         ! hash "wget" && \
                 { echo "missing wget (apt-get install wget)"; return 1; }
@@ -51,10 +53,9 @@ function install_deps() {
                         { echo "Failed to install Maven"; return 1; }
         fi
 
-        if ! hash "java" 2>/dev/null || ! java -version 2>&1 | grep -qE 'version "1\.8|version "8'; then
-                echo "Installing Java 8..."
-                apt-get update && apt-get install -y openjdk-8-jdk || \
-                        { echo "Failed to install Java 8"; return 1; }
+        if ! hash "java" 2>/dev/null || ! hash "javac" 2>/dev/null; then
+                echo "No JDK found. Install Oracle JDK 25 from https://www.oracle.com/java/technologies/downloads/"
+                return 1
         fi
 
         if ! hash "wget" 2>/dev/null; then
