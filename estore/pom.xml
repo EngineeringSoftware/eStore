@@ -219,9 +219,10 @@
   </build>
   <profiles>
     <!--
-      Rewrites the queries in @CompileQuery test methods into Transformed*Test.java before the
-      tests compile. The plugin depends on this module, so it cannot be in the same reactor
-      (even with -pl): install it first, then build this module's POM directly, e.g.
+      Rewrites the queries in @CompileQuery test methods into Transformed*Test.java under
+      target/generated-test-sources/compiled-queries before the tests compile. The plugin
+      depends on this module, so it cannot be in the same reactor (even with -pl): install it
+      first, then build this module's POM directly, e.g.
         mvn -pl estore -am install -DskipTests && mvn -pl estore-maven-plugin install
         mvn -f estore -Pcompile-queries test
     -->

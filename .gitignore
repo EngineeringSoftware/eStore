@@ -16,9 +16,6 @@ eval/libs/*.jar
 # data
 data/
 
-# Codegen files
-Transformed*Test.java
-
 # Local agent instructions (not committed)
 AGENTS.md
 .cursor/
