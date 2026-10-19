@@ -53,13 +53,14 @@ public class CompiledQueryTest {
         assertEquals(rowCounts(interpreted), rowCounts(compiled), cypher);
     }
 
-    private void assertSameGraphAsReference() {
-        for (String cypher :
+    private void assertSameAsInterpretedOnReference(String cypher, Table compiled) {
+        assertEquals(rowCounts(interpret(reference, cypher)), rowCounts(compiled), cypher);
+        for (String check :
                 new String[] {"MATCH (n) RETURN COUNT(n)", "MATCH (n)-[]->(m) RETURN COUNT(n)"}) {
             assertEquals(
-                    rowCounts(interpret(reference, cypher)),
-                    rowCounts(interpret(estore, cypher)),
-                    cypher);
+                    rowCounts(interpret(reference, check)),
+                    rowCounts(interpret(estore, check)),
+                    cypher + " then " + check);
         }
     }
 
@@ -135,45 +136,30 @@ public class CompiledQueryTest {
     @CompileQuery
     @Test
     void createLabelNode() {
-        Table compiled = estore.query("CREATE (n:`org.estore.example.D`) RETURN COUNT(n)");
-        Table interpreted =
-                interpret(reference, "CREATE (n:`org.estore.example.D`) RETURN COUNT(n)");
-
-        assertEquals(rowCounts(interpreted), rowCounts(compiled));
-        assertSameGraphAsReference();
+        assertSameAsInterpretedOnReference(
+                "CREATE (n:`org.estore.example.D`) RETURN COUNT(n)",
+                estore.query("CREATE (n:`org.estore.example.D`) RETURN COUNT(n)"));
     }
 
     @CompileQuery
     @Test
     void deleteRelation() {
-        Table compiled =
+        assertSameAsInterpretedOnReference(
+                "MATCH (n:`org.estore.example.A`)-[r:b]->(m) DELETE r RETURN COUNT(n)",
                 estore.query(
-                        "MATCH (n:`org.estore.example.A`)-[r:b]->(m) DELETE r RETURN COUNT(n)");
-        Table interpreted =
-                interpret(
-                        reference,
-                        "MATCH (n:`org.estore.example.A`)-[r:b]->(m) DELETE r RETURN COUNT(n)");
-
-        assertEquals(rowCounts(interpreted), rowCounts(compiled));
-        assertSameGraphAsReference();
+                        "MATCH (n:`org.estore.example.A`)-[r:b]->(m) DELETE r RETURN COUNT(n)"));
     }
 
     @CompileQuery
     @Test
     void matchThenCreateRelation() {
-        Table compiled =
+        assertSameAsInterpretedOnReference(
+                "MATCH (c:`org.estore.example.C` {field1:10}),"
+                        + " (d:`org.estore.example.D` {field1:10})"
+                        + " CREATE (c)-[r:d]->(d) RETURN COUNT(r)",
                 estore.query(
                         "MATCH (c:`org.estore.example.C` {field1:10}),"
                                 + " (d:`org.estore.example.D` {field1:10})"
-                                + " CREATE (c)-[r:d]->(d) RETURN COUNT(r)");
-        Table interpreted =
-                interpret(
-                        reference,
-                        "MATCH (c:`org.estore.example.C` {field1:10}),"
-                                + " (d:`org.estore.example.D` {field1:10})"
-                                + " CREATE (c)-[r:d]->(d) RETURN COUNT(r)");
-
-        assertEquals(rowCounts(interpreted), rowCounts(compiled));
-        assertSameGraphAsReference();
+                                + " CREATE (c)-[r:d]->(d) RETURN COUNT(r)"));
     }
 }

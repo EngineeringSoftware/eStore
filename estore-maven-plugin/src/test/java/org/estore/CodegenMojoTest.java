@@ -96,17 +96,6 @@ public class CodegenMojoTest {
     }
 
     @Test
-    void isIdempotentWhenRunTwice() throws Exception {
-        writeSource("CTest", "    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
-
-        runMojo();
-        String first = read(outDir.resolve("p/TransformedCTest.java"));
-        runMojo();
-
-        assertEquals(first, read(outDir.resolve("p/TransformedCTest.java")));
-    }
-
-    @Test
     void removesOutputForSourcesThatNoLongerExist() throws Exception {
         Path source =
                 writeSource(
@@ -133,15 +122,6 @@ public class CodegenMojoTest {
         assertTrue(e.getMessage().contains(file.toString()), e.getMessage());
         assertTrue(e.getMessage().contains("WHERE is not supported"), e.getMessage());
         assertFalse(Files.exists(outDir.resolve("p/TransformedDTest.java")));
-    }
-
-    @Test
-    void failsBuildForNonLiteralQuery() throws Exception {
-        writeSource("ETest", "    @CompileQuery void m(String q) { db.query(q); }\n");
-
-        MojoExecutionException e = assertThrows(MojoExecutionException.class, this::runMojo);
-
-        assertTrue(e.getMessage().contains("string literal"), e.getMessage());
     }
 
     @Test

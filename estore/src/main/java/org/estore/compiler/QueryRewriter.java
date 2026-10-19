@@ -16,13 +16,12 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.estore.antlr4.CypherLexer;
 import org.estore.antlr4.CypherParser;
 
 /**
- * Rewrites {@code db.query("...")} calls in Java source into generated Java code that evaluates the
- * Cypher query directly, and renames the rewritten top-level classes with {@link
+ * Rewrites {@code db.query("...")} calls in {@link CompileQuery} methods into generated Java code
+ * that evaluates the Cypher query directly, and renames the rewritten top-level classes with {@link
  * #TRANSFORMED_PREFIX}.
  */
 public final class QueryRewriter {
@@ -66,10 +65,9 @@ public final class QueryRewriter {
     private QueryRewriter() {}
 
     /**
-     * Rewrites every query call inside methods annotated with {@link CompileQuery}.
-     *
-     * <p>Every query in an annotated method must be compiled, so anything that cannot be is an
-     * error rather than being left to the interpreter.
+     * Rewrites every {@code db.query("...")} call inside methods annotated with {@link
+     * CompileQuery}. Any query that cannot be compiled is an error rather than being left to the
+     * interpreter.
      *
      * @param source Java source of a compilation unit.
      * @return the rewritten source, or empty if the source has no annotated method.
@@ -78,7 +76,12 @@ public final class QueryRewriter {
      *     not support.
      */
     public static Optional<String> rewriteAnnotatedMethods(String source) {
-        CompilationUnit cu = parseSource(source);
+        CompilationUnit cu;
+        try {
+            cu = StaticJavaParser.parse(source);
+        } catch (ParseProblemException e) {
+            throw new QueryCompileException("Cannot parse Java source: " + e.getMessage(), e);
+        }
         List<MethodDeclaration> methods =
                 cu.findAll(MethodDeclaration.class, md -> md.isAnnotationPresent(ANNOTATION));
         if (methods.isEmpty()) {
@@ -86,29 +89,17 @@ public final class QueryRewriter {
         }
         for (MethodDeclaration md : methods) {
             md.getAnnotationByName(ANNOTATION).ifPresent(Node::remove);
-            if (rewriteQueryCalls(md, true) == 0) {
+            List<MethodCallExpr> calls =
+                    md.findAll(MethodCallExpr.class, c -> c.getNameAsString().equals("query"));
+            if (calls.isEmpty()) {
                 throw new QueryCompileException(
                         "@CompileQuery method "
                                 + md.getNameAsString()
                                 + " contains no db.query(\"...\") call to compile");
             }
+            calls.forEach(QueryRewriter::rewriteQueryCall);
         }
         return Optional.of(finish(cu));
-    }
-
-    /**
-     * Rewrites every query call whose argument is a string literal, or a concatenation of string
-     * literals. Other query calls are left in place.
-     *
-     * @param source Java source of a compilation unit.
-     * @return the rewritten source.
-     * @throws QueryCompileException if the source does not parse or a literal query cannot be
-     *     compiled.
-     */
-    public static String rewriteAllQueries(String source) {
-        CompilationUnit cu = parseSource(source);
-        rewriteQueryCalls(cu, false);
-        return finish(cu);
     }
 
     /**
@@ -128,58 +119,31 @@ public final class QueryRewriter {
             lexer.addErrorListener(ThrowingErrorListener.INSTANCE);
             parser.removeErrorListeners();
             parser.addErrorListener(ThrowingErrorListener.INSTANCE);
-            ParseTree tree = parser.oC_Cypher();
-            Object code = new CodeGenBuilder(dbName, null).visit(tree);
-            if (!(code instanceof String)) {
-                throw new QueryCompileException("code generation produced no Java code");
-            }
-            return (String) code;
+            return (String) new CodeGenBuilder(dbName, null).visit(parser.oC_Cypher());
         } catch (RuntimeException e) {
             throw new QueryCompileException(
                     "Cannot compile Cypher query `" + cypher + "`: " + e.getMessage(), e);
         }
     }
 
-    private static CompilationUnit parseSource(String source) {
+    private static void rewriteQueryCall(MethodCallExpr call) {
+        String where = "query call at line " + call.getBegin().map(p -> p.line).orElse(-1);
+        Optional<String> cypher =
+                call.getScope().isPresent() && call.getArguments().size() == 1
+                        ? concatenatedLiteral(call.getArgument(0))
+                        : Optional.empty();
+        if (!cypher.isPresent()) {
+            throw new QueryCompileException(
+                    where
+                            + " must have the form db.query(\"...\") with a string literal"
+                            + " (or concatenation of literals) argument");
+        }
         try {
-            return StaticJavaParser.parse(source);
-        } catch (ParseProblemException e) {
-            throw new QueryCompileException("Cannot parse Java source: " + e.getMessage(), e);
+            String code = compileCypher(call.getScope().get().toString(), cypher.get());
+            call.replace(StaticJavaParser.parseExpression(code));
+        } catch (QueryCompileException | ParseProblemException e) {
+            throw new QueryCompileException(where + ": " + e.getMessage(), e);
         }
-    }
-
-    private static int rewriteQueryCalls(Node root, boolean strict) {
-        int rewritten = 0;
-        for (MethodCallExpr call :
-                root.findAll(MethodCallExpr.class, c -> c.getNameAsString().equals("query"))) {
-            Optional<String> cypher = literalQuery(call);
-            if (!cypher.isPresent()) {
-                if (strict) {
-                    throw new QueryCompileException(
-                            describe(call)
-                                    + " must have the form db.query(\"...\") with a string"
-                                    + " literal (or concatenation of literals) argument");
-                }
-                continue;
-            }
-            String dbName = call.getScope().get().toString();
-            String code;
-            try {
-                code = compileCypher(dbName, cypher.get());
-            } catch (QueryCompileException e) {
-                throw new QueryCompileException(describe(call) + ": " + e.getMessage(), e);
-            }
-            call.replace(parseGeneratedExpression(call, code));
-            rewritten++;
-        }
-        return rewritten;
-    }
-
-    private static Optional<String> literalQuery(MethodCallExpr call) {
-        if (!call.getScope().isPresent() || call.getArguments().size() != 1) {
-            return Optional.empty();
-        }
-        return concatenatedLiteral(call.getArgument(0));
     }
 
     private static Optional<String> concatenatedLiteral(Expression expr) {
@@ -194,20 +158,6 @@ public final class QueryRewriter {
             }
         }
         return Optional.empty();
-    }
-
-    private static Expression parseGeneratedExpression(MethodCallExpr call, String code) {
-        try {
-            return StaticJavaParser.parseExpression(code);
-        } catch (ParseProblemException e) {
-            throw new QueryCompileException(
-                    describe(call) + ": generated Java code does not parse: " + e.getMessage(), e);
-        }
-    }
-
-    private static String describe(MethodCallExpr call) {
-        String line = call.getBegin().map(p -> " at line " + p.line).orElse("");
-        return "query call" + line;
     }
 
     private static String finish(CompilationUnit cu) {

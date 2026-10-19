@@ -77,55 +77,38 @@ public class QueryRewriterTest {
         assertFalse(rewritten.contains("db.getDataStore()"));
     }
 
+    private static String rewriteError(String source) {
+        return assertThrows(
+                        QueryCompileException.class,
+                        () -> QueryRewriter.rewriteAnnotatedMethods(source))
+                .getMessage();
+    }
+
     @Test
     void rejectsAnnotatedMethodWithoutQuery() {
-        QueryCompileException e =
-                assertThrows(
-                        QueryCompileException.class,
-                        () ->
-                                QueryRewriter.rewriteAnnotatedMethods(
-                                        source(annotatedMethodBody("int x = 1;"))));
-
-        assertTrue(e.getMessage().contains("method m"));
+        assertTrue(rewriteError(source(annotatedMethodBody("int x = 1;"))).contains("method m"));
     }
 
     @Test
-    void rejectsNonLiteralQueryInAnnotatedMethod() {
-        String body = "String q = \"MATCH (n) RETURN n\"; db.query(q);";
+    void rejectsNonLiteralQueries() {
+        String variable = "String q = \"MATCH (n) RETURN n\"; db.query(q);";
+        String mixed = "String s = \"n\"; db.query(\"MATCH (n) RETURN \" + s);";
 
-        QueryCompileException e =
-                assertThrows(
-                        QueryCompileException.class,
-                        () ->
-                                QueryRewriter.rewriteAnnotatedMethods(
-                                        source(annotatedMethodBody(body))));
-
-        assertTrue(e.getMessage().contains("string literal"));
-    }
-
-    @Test
-    void rejectsMixedConcatenationInAnnotatedMethod() {
-        String body = "String s = \"n\"; db.query(\"MATCH (n) RETURN \" + s);";
-
-        assertThrows(
-                QueryCompileException.class,
-                () -> QueryRewriter.rewriteAnnotatedMethods(source(annotatedMethodBody(body))));
+        assertTrue(rewriteError(source(annotatedMethodBody(variable))).contains("string literal"));
+        assertTrue(rewriteError(source(annotatedMethodBody(mixed))).contains("string literal"));
     }
 
     @Test
     void reportsLineAndQueryForUnsupportedCypher() {
-        String body = "db.query(\"MATCH (n) WHERE n.field1 = 1 RETURN n\");";
+        String message =
+                rewriteError(
+                        source(
+                                annotatedMethodBody(
+                                        "db.query(\"MATCH (n) WHERE n.field1 = 1 RETURN n\");")));
 
-        QueryCompileException e =
-                assertThrows(
-                        QueryCompileException.class,
-                        () ->
-                                QueryRewriter.rewriteAnnotatedMethods(
-                                        source(annotatedMethodBody(body))));
-
-        assertTrue(e.getMessage().contains("line 8"), e.getMessage());
-        assertTrue(e.getMessage().contains("MATCH (n) WHERE n.field1 = 1 RETURN n"));
-        assertTrue(e.getMessage().contains("WHERE is not supported"));
+        assertTrue(message.contains("line 8"), message);
+        assertTrue(message.contains("MATCH (n) WHERE n.field1 = 1 RETURN n"), message);
+        assertTrue(message.contains("WHERE is not supported"), message);
     }
 
     @Test
@@ -140,31 +123,7 @@ public class QueryRewriterTest {
 
     @Test
     void rejectsUnparseableJavaSource() {
-        QueryCompileException e =
-                assertThrows(
-                        QueryCompileException.class,
-                        () -> QueryRewriter.rewriteAnnotatedMethods("class {"));
-
-        assertTrue(e.getMessage().contains("Cannot parse Java source"));
-    }
-
-    @Test
-    void rewriteAllLeavesNonLiteralQueriesInPlace() {
-        String rewritten =
-                QueryRewriter.rewriteAllQueries(
-                        source(
-                                "    void a(String q) { db.query(q); }\n",
-                                "    void b() { db.query(\"MATCH (n) RETURN n\"); }\n"));
-
-        assertTrue(rewritten.contains("db.query(q)"));
-        assertFalse(rewritten.contains("db.query(\"MATCH (n) RETURN n\")"));
-    }
-
-    @Test
-    void rewriteAllRejectsUnsupportedLiteralQuery() {
-        String source = source("    void b() { db.query(\"MATCH (n) RETURN n LIMIT 1\"); }\n");
-
-        assertThrows(QueryCompileException.class, () -> QueryRewriter.rewriteAllQueries(source));
+        assertTrue(rewriteError("class {").contains("Cannot parse Java source"));
     }
 
     @Test

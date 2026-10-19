@@ -196,15 +196,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>compile</id>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <mainClass>org.estore.compiler.ImplCodeGen</mainClass>
-            </configuration>
-          </execution>
-          <execution>
             <id>main</id>
             <goals>
               <goal>java</goal>

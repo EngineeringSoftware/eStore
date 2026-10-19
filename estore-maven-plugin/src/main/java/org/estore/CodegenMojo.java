@@ -89,7 +89,6 @@ public class CodegenMojo extends AbstractMojo {
     }
 
     private boolean rewriteFile(Path file) throws MojoExecutionException {
-        long start = System.currentTimeMillis();
         Optional<String> rewritten;
         try {
             String source = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
@@ -113,14 +112,6 @@ public class CodegenMojo extends AbstractMojo {
             throw new MojoExecutionException("Cannot write " + target, e);
         }
         getLog().info("Transformed " + file.getFileName() + " to " + target.getFileName());
-        if (profiling) {
-            getLog().info(
-                            "Time taken for "
-                                    + file.getFileName()
-                                    + ": "
-                                    + (System.currentTimeMillis() - start)
-                                    + " ms");
-        }
         return true;
     }
 }
