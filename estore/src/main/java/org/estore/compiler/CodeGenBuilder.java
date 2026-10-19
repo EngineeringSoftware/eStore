@@ -13,7 +13,6 @@ import org.estore.compiler.projection.VarProjection;
 import org.estore.compiler.scan.AllNodeScan;
 import org.estore.compiler.scan.NodeLabelPropScan;
 import org.estore.compiler.scan.NodeLabelScan;
-import org.estore.compiler.scan.NodePropScan;
 import org.estore.compiler.scan.TwoNodeRelationScan;
 import org.estore.compiler.scan.VarLengthRelationScan;
 import org.estore.planner.LogicalPlanBuilder;
@@ -63,6 +62,19 @@ public class CodeGenBuilder extends LogicalPlanBuilder {
     }
 
     @Override
+    public Object visitOC_RegularQuery(CypherParser.OC_RegularQueryContext ctx) {
+        if (!ctx.oC_Union().isEmpty()) {
+            throw unsupported("UNION");
+        }
+        return ctx.oC_SingleQuery().accept(this);
+    }
+
+    @Override
+    public Object visitOC_MultiPartQuery(CypherParser.OC_MultiPartQueryContext ctx) {
+        throw unsupported("WITH");
+    }
+
+    @Override
     public Object visitOC_SinglePartQuery(CypherParser.OC_SinglePartQueryContext ctx) {
         String res = "";
         for (CypherParser.OC_ReadingClauseContext rCtx : ctx.oC_ReadingClause()) {
@@ -79,11 +91,10 @@ public class CodeGenBuilder extends LogicalPlanBuilder {
 
     @Override
     public Object visitOC_ReadingClause(CypherParser.OC_ReadingClauseContext ctx) {
-        String res = "";
-        if (ctx.oC_Match() != null) {
-            res += (String) ctx.oC_Match().accept(this);
+        if (ctx.oC_Match() == null) {
+            throw unsupported("reading clauses other than MATCH");
         }
-        return res;
+        return ctx.oC_Match().accept(this);
     }
 
     @Override
@@ -93,18 +104,19 @@ public class CodeGenBuilder extends LogicalPlanBuilder {
             res += (String) ctx.oC_Create().accept(this);
         } else if (ctx.oC_Delete() != null) {
             res += (String) ctx.oC_Delete().accept(this);
+        } else {
+            throw unsupported("updating clauses other than CREATE and DELETE");
         }
         return res;
     }
 
     @Override
     public Object visitOC_Delete(CypherParser.OC_DeleteContext ctx) {
-        String res = "";
-        if (ctx.oC_Expression().size() == 1) {
-            VarExpr variable = (VarExpr) ctx.oC_Expression(0).accept(this);
-            res += DeleteRelation.codegen(dbname, assignId++, variable.evaluate(null));
+        if (ctx.oC_Expression().size() != 1) {
+            throw unsupported("DELETE of more than one variable");
         }
-        return res;
+        VarExpr variable = (VarExpr) ctx.oC_Expression(0).accept(this);
+        return DeleteRelation.codegen(dbname, assignId++, variable.evaluate(null));
     }
 
     @Override
@@ -121,15 +133,12 @@ public class CodeGenBuilder extends LogicalPlanBuilder {
                             && nodePattern.getProperties() != null) {
                         res += CreateLabelPropNode.codegen(dbname, nodePattern);
                     } else {
-                        System.out.println("Not supported yet");
-                        System.exit(1);
+                        throw unsupported("CREATE of a node without a label");
                     }
                 } else if (pattern.isMultiLengthRelationPattern()) {
-                    System.out.println("Not supported yet");
-                    System.exit(1);
+                    throw unsupported("CREATE of a path with more than one relationship");
                 } else if (pattern.getRelationPattern(0).isVarLengthRelation()) {
-                    System.out.println("Not supported yet");
-                    System.exit(1);
+                    throw unsupported("CREATE of a variable-length relationship");
                 } else {
                     NodePattern nodePattern1 = pattern.getNodePattern(0);
                     NodePattern nodePattern2 = pattern.getNodePattern(1);
@@ -157,6 +166,17 @@ public class CodeGenBuilder extends LogicalPlanBuilder {
     }
 
     @Override
+    public Object visitOC_ProjectionBody(CypherParser.OC_ProjectionBodyContext ctx) {
+        if (ctx.DISTINCT() != null) {
+            throw unsupported("DISTINCT");
+        }
+        if (ctx.oC_Order() != null || ctx.oC_Skip() != null || ctx.oC_Limit() != null) {
+            throw unsupported("ORDER BY, SKIP and LIMIT");
+        }
+        return ctx.oC_ProjectionItems().accept(this);
+    }
+
+    @Override
     public Object visitOC_ProjectionItems(CypherParser.OC_ProjectionItemsContext ctx) {
         String res = "";
         List<LogicalExpr> expressions = null;
@@ -177,6 +197,12 @@ public class CodeGenBuilder extends LogicalPlanBuilder {
 
     @Override
     public Object visitOC_Match(CypherParser.OC_MatchContext ctx) {
+        if (ctx.OPTIONAL() != null) {
+            throw unsupported("OPTIONAL MATCH");
+        }
+        if (ctx.oC_Where() != null) {
+            throw unsupported("WHERE");
+        }
         String res = "";
         if (ctx.oC_Pattern() != null) {
             List<PatternElement> patterns = (List<PatternElement>) ctx.oC_Pattern().accept(this);
@@ -191,7 +217,7 @@ public class CodeGenBuilder extends LogicalPlanBuilder {
                         res += NodeLabelScan.codegen(dbname, nodePattern);
                     } else if (nodePattern.getLabel() == null
                             && nodePattern.getProperties() != null) {
-                        res += NodePropScan.codegen(dbname, nodePattern);
+                        throw unsupported("MATCH on node properties without a label");
                     } else if (nodePattern.getLabel() != null
                             && nodePattern.getProperties() != null) {
                         res += NodeLabelPropScan.codegen(dbname, nodePattern);
@@ -281,5 +307,9 @@ public class CodeGenBuilder extends LogicalPlanBuilder {
             }
         }
         return res;
+    }
+
+    private static QueryCompileException unsupported(String construct) {
+        return new QueryCompileException(construct + " is not supported by the query compiler");
     }
 }

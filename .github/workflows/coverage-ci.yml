@@ -19,11 +19,10 @@ jobs:
       - name: Install test-data tools
         run: sudo apt-get update && sudo apt-get install -y wget zstd
 
-      - name: Install codegen plugin
-        run: mvn -pl estore-maven-plugin -am install -DskipTests -Djacoco.skip=true
-
-      - name: Rewrite annotated queries
-        run: mvn -pl estore org.estore:estore-maven-plugin:1.0-SNAPSHOT:codegen
+      - name: Install estore and test the codegen plugin
+        run: |
+          mvn -pl estore -am install -DskipTests -Djacoco.skip=true
+          mvn -pl estore-maven-plugin install
 
       - name: Check coverage
-        run: mvn -pl estore clean test jacoco:report jacoco:check
+        run: mvn -f estore -Pcompile-queries clean test jacoco:report jacoco:check

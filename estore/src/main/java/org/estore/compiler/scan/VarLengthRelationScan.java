@@ -1,6 +1,7 @@
 package org.estore.compiler.scan;
 
 import java.util.List;
+import org.estore.compiler.QueryCompileException;
 import org.estore.planner.pattern.NodePattern;
 import org.estore.planner.pattern.RelationPattern;
 import org.estore.planner.util.NodeProperty;
@@ -163,9 +164,9 @@ public final class VarLengthRelationScan {
                             refereeLabel,
                             pRange);
         } else {
-            // Non-DFS case not implemented yet
-            System.out.println("Non-DFS case VarLengthRelation not supported yet");
-            System.exit(1);
+            throw new QueryCompileException(
+                    "variable-length relationships from a node without a label are not supported"
+                            + " by the query compiler");
         }
 
         return res;

@@ -25,6 +25,7 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <version>5.9.2</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.ow2.asm</groupId>
@@ -90,19 +91,6 @@
   </dependencies>
   <build>
     <plugins>
-      <!-- custom plugin -->
-      <!-- <plugin>
-        <groupId>org.estore</groupId>
-        <artifactId>estore-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>codegen</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin> -->
       <!-- surefire plugin to run tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -230,6 +218,32 @@
     </plugins>
   </build>
   <profiles>
+    <!--
+      Rewrites the queries in @CompileQuery test methods into Transformed*Test.java before the
+      tests compile. The plugin depends on this module, so it cannot be in the same reactor
+      (even with -pl): install it first, then build this module's POM directly, e.g.
+        mvn -pl estore -am install -DskipTests && mvn -pl estore-maven-plugin install
+        mvn -f estore -Pcompile-queries test
+    -->
+    <profile>
+      <id>compile-queries</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.estore</groupId>
+            <artifactId>estore-maven-plugin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>codegen</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>java-9-plus-test-opens</id>
       <activation>
