@@ -125,6 +125,20 @@ public class CodegenMojoTest {
     }
 
     @Test
+    void refusesOutputDirThatContainsSources() throws Exception {
+        Path source =
+                writeSource(
+                        "GTest",
+                        "    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
+        outDir = root;
+
+        MojoExecutionException e = assertThrows(MojoExecutionException.class, this::runMojo);
+
+        assertTrue(e.getMessage().contains("must be a separate directory"), e.getMessage());
+        assertTrue(Files.exists(source));
+    }
+
+    @Test
     void skipsMissingSourceDirectory() throws Exception {
         runMojo();
 

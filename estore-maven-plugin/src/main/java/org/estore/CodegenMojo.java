@@ -67,7 +67,15 @@ public class CodegenMojo extends AbstractMojo {
     }
 
     private void deleteOutputDir() throws MojoExecutionException {
-        Path dir = outputDir.toPath();
+        Path dir = outputDir.toPath().toAbsolutePath().normalize();
+        if (sourceDir.toPath().toAbsolutePath().normalize().startsWith(dir)) {
+            throw new MojoExecutionException(
+                    "outputDir "
+                            + outputDir
+                            + " contains sourceDir "
+                            + sourceDir
+                            + "; it is cleared on every run, so it must be a separate directory");
+        }
         if (!Files.exists(dir)) {
             return;
         }
