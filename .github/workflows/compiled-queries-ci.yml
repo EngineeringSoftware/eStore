@@ -1,0 +1,28 @@
+name: Compiled Queries CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  compiled-queries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: oracle
+          java-version: "25"
+          cache: maven
+
+      - name: Install test-data tools
+        run: sudo apt-get update && sudo apt-get install -y wget zstd
+
+      - name: Install estore and test the codegen plugin
+        run: |
+          mvn -pl estore -am install -DskipTests -Djacoco.skip=true
+          mvn -pl estore-maven-plugin install
+
+      - name: Rewrite @CompileQuery tests and run them
+        run: mvn -f estore -Pcompile-queries clean test -Djacoco.skip=true -Dtest='Transformed*'

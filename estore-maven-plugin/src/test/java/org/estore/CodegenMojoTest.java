@@ -13,6 +13,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.io.TempDir;
 
 public class CodegenMojoTest {
@@ -22,15 +23,18 @@ public class CodegenMojoTest {
     private Path srcDir;
     private Path outDir;
     private MavenProject project;
+    private String className;
 
     @BeforeEach
-    void setUp() {
+    void setUp(TestInfo testInfo) {
+        String method = testInfo.getTestMethod().get().getName();
+        className = Character.toUpperCase(method.charAt(0)) + method.substring(1) + "Test";
         srcDir = root.resolve("src");
         outDir = root.resolve("target/generated-test-sources/compiled-queries");
         project = new MavenProject();
     }
 
-    private Path writeSource(String className, String body) throws IOException {
+    private Path writeSource(String body) throws IOException {
         Path pkg = Files.createDirectories(srcDir.resolve("p"));
         String source =
                 "package p;\n"
@@ -45,6 +49,10 @@ public class CodegenMojoTest {
         Path file = pkg.resolve(className + ".java");
         Files.write(file, source.getBytes(StandardCharsets.UTF_8));
         return file;
+    }
+
+    private Path transformedPath() {
+        return outDir.resolve("p/Transformed" + className + ".java");
     }
 
     private static String read(Path file) throws IOException {
@@ -62,21 +70,20 @@ public class CodegenMojoTest {
 
     @Test
     void writesTransformedFileIntoOutputPackage() throws Exception {
-        writeSource("ATest", "    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
+        writeSource("    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
 
         runMojo();
 
-        Path transformed = outDir.resolve("p/TransformedATest.java");
-        assertTrue(Files.exists(transformed));
-        String code = read(transformed);
-        assertTrue(code.contains("class TransformedATest"));
+        assertTrue(Files.exists(transformedPath()));
+        String code = read(transformedPath());
+        assertTrue(code.contains("class Transformed" + className));
         assertFalse(code.contains("db.query("));
-        assertFalse(Files.exists(srcDir.resolve("p/TransformedATest.java")));
+        assertFalse(Files.exists(srcDir.resolve("p/Transformed" + className + ".java")));
     }
 
     @Test
     void registersOutputDirAsTestSourceRoot() throws Exception {
-        writeSource("ATest", "    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
+        writeSource("    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
 
         runMojo();
 
@@ -85,35 +92,32 @@ public class CodegenMojoTest {
 
     @Test
     void skipsFilesWithoutAnnotatedMethods() throws Exception {
-        Path original =
-                writeSource("BTest", "    void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
+        Path original = writeSource("    void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
         String before = read(original);
 
         runMojo();
 
-        assertFalse(Files.exists(outDir.resolve("p/TransformedBTest.java")));
+        assertFalse(Files.exists(transformedPath()));
         assertEquals(before, read(original));
     }
 
     @Test
     void removesOutputForSourcesThatNoLongerExist() throws Exception {
         Path source =
-                writeSource(
-                        "FTest",
-                        "    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
+                writeSource("    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
         runMojo();
+        assertTrue(Files.exists(transformedPath()));
         Files.delete(source);
 
         runMojo();
 
-        assertFalse(Files.exists(outDir.resolve("p/TransformedFTest.java")));
+        assertFalse(Files.exists(transformedPath()));
     }
 
     @Test
     void failsBuildNamingFileForUnsupportedQuery() throws Exception {
         Path file =
                 writeSource(
-                        "DTest",
                         "    @CompileQuery void m() {"
                                 + " db.query(\"MATCH (n) WHERE n.x = 1 RETURN n\"); }\n");
 
@@ -121,15 +125,13 @@ public class CodegenMojoTest {
 
         assertTrue(e.getMessage().contains(file.toString()), e.getMessage());
         assertTrue(e.getMessage().contains("WHERE is not supported"), e.getMessage());
-        assertFalse(Files.exists(outDir.resolve("p/TransformedDTest.java")));
+        assertFalse(Files.exists(transformedPath()));
     }
 
     @Test
     void refusesOutputDirThatContainsSources() throws Exception {
         Path source =
-                writeSource(
-                        "GTest",
-                        "    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
+                writeSource("    @CompileQuery void m() { db.query(\"MATCH (n) RETURN n\"); }\n");
         outDir = root;
 
         MojoExecutionException e = assertThrows(MojoExecutionException.class, this::runMojo);
