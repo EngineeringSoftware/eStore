@@ -160,6 +160,22 @@ mvn -pl estore test verify
 
 The JaCoCo code coverage report is generated at `estore/target/site/jacoco/index.html`.
 
+#### Run Tests with Compiled Queries
+
+For now, `@CompileQuery` is for test methods only: the codegen plugin scans the test sources
+(`estore/src/test/java`) and ignores the annotation anywhere else. For each test class with
+annotated methods, the `compile-queries` profile generates a `Transformed<Name>Test.java` under
+`estore/target/generated-test-sources/compiled-queries`, where those methods' Cypher queries are
+compiled to Java. The build fails if a query cannot be compiled.
+
+The codegen plugin depends on `estore`, so install both first, then build the `estore` POM
+directly:
+
+```bash
+mvn -pl estore -am install -DskipTests && mvn -pl estore-maven-plugin install
+mvn -f estore -Pcompile-queries test
+```
+
 #### Run the Application
 
 Start the estore server and query it over the network:
